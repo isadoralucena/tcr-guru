@@ -53,4 +53,40 @@ export type Congruence = {
         simplifiedRemainder: simplified,
       };
     }
+
+    static verifyPairwiseCoprime(moduli: number[]): boolean {
+        for (let i = 0; i < moduli.length; i++) {
+          for (let j = i + 1; j < moduli.length; j++) {
+            if (this.gcd(moduli[i], moduli[j]) !== 1) return false;
+          }
+        }
+        return true;
+      }
+    
+      static solveCRT(system: Congruence[]): CRTReturn {
+        const canonical = system.map(eq => this.simplify(eq));
+        const moduli = canonical.map(c => c.original.m);
+        if (!this.verifyPairwiseCoprime(moduli)) {
+          throw new Error("Os módulos não são coprimos entre si.");
+        }
+    
+        const M = moduli.reduce((acc, m) => acc * m, 1);
+        const steps = canonical.map(({ simplifiedRemainder: r, original: { m } }) => {
+          const M_i = M / m;
+          const inv = this.modInverse(M_i, m);
+          const term = r * M_i * inv;
+          return { remainder: r, modulus: m, partialProduct: M_i, inverse: inv, term };
+        });
+    
+        const weightedSum = steps.reduce((acc, { term }) => acc + term, 0);
+        const solution = ((weightedSum % M) + M) % M;
+    
+        return {
+          canonical,
+          totalModulus: M,
+          steps,
+          weightedSum,
+          solution,
+        };
+      }
 }
