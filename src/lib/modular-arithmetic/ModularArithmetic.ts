@@ -1,27 +1,27 @@
 export type Congruence = {
-  a: number;
-  b: number;
-  m: number;
+  coefficient: number;
+  remainder: number;
+  modulus: number;
 };
   
 export type CanonicalStep = {
-  original: Congruence;
-  aInverse: number;
+  originalCongruence: Congruence;
+  modulusInverse: number;
   simplifiedRemainder: number;
 };
 
 export type ContributionStep = {
   remainder: number;
   modulus: number;
-  partialProduct: number;
-  inverse: number;
-  term: number;
+  partialModulusProduct: number;
+  modulusInverse: number;
+  contributionTerm: number;
 };
 
 export type CRTReturn = {
-  canonical: CanonicalStep[];
+  canonicalCongruences : CanonicalStep[];
   totalModulus: number;
-  steps: ContributionStep[];
+  calculationSteps: ContributionStep[];
   weightedSum: number;
   solution: number;
 };
@@ -32,7 +32,7 @@ export type CRTReturn = {
  * @param {number} b - Second number.
  * @returns {number} The greatest common divisor of a and b.
  */
-export function gcd (a: number, b: number): number {
+export function gcd(a: number, b: number): number {
   while (b !== 0) [a, b] = [b, a % b];
   return Math.abs(a);
 }
@@ -49,7 +49,7 @@ export function extendedGCD(a: number, b: number): [number, number, number] {
   const [g, x1, y1] = extendedGCD(b, a % b);
   return [g, y1, x1 - Math.floor(a / b) * y1];
 }
-  
+
 /**
  * Computes the modular inverse of a modulo m.
  * @param {number} a - The number to invert.
@@ -59,23 +59,23 @@ export function extendedGCD(a: number, b: number): [number, number, number] {
  */
 export function modInverse(a: number, m: number): number {
   const [g, x] = extendedGCD(a, m);
-  if (g !== 1) throw new Error(`Não existe inverso de ${a} módulo ${m}`);
+  if (g !== 1) throw new Error(`Não existe inverso de ${a} módulo ${m}, pois o cálculo do MDC entre ${a} e ${m} foi diferente de 1.`);
   return ((x % m) + m) % m;
 }
-  
+
 /**
- * Simplifies a congruence of the form ax ≡ b (mod m) to x ≡ b' (mod m),
- * by multiplying b by the modular inverse of a mod m.
+ * Simplifies a congruence of the form ax ≡ b (mod m) to x ≡ newRemainder (mod m),
+ * where newRemainder is the result of multiplying the remainder 'b' by the modular inverse of 'a' modulo 'm'.
  * @param {Congruence} eq - The original congruence.
  * @returns {CanonicalStep} The simplified congruence along with inverse and new remainder.
  */
-export function simplify(eq: Congruence): CanonicalStep {
-  const inv = modInverse(eq.a, eq.m);
-  const simplified = ((eq.b * inv) % eq.m + eq.m) % eq.m;
+export function simplifyCongruence(eq: Congruence): CanonicalStep {
+  const inv = modInverse(eq.coefficient, eq.modulus);
+  const simplifiedRemainder = ((eq.remainder * inv) % eq.modulus + eq.modulus) % eq.modulus;
   return {
-    original: eq,
-    aInverse: inv,
-    simplifiedRemainder: simplified,
+    originalCongruence: eq,
+    modulusInverse: inv,
+    simplifiedRemainder,
   };
 }
 
@@ -84,7 +84,7 @@ export function simplify(eq: Congruence): CanonicalStep {
  * @param {number[]} moduli - List of moduli.
  * @returns {boolean} True if all are pairwise coprime, false otherwise.
  */
-export function verifyPairwiseCoprime(moduli: number[]): boolean {
+export function areModuliCoprime(moduli: number[]): boolean {
   for (let i = 0; i < moduli.length; i++) {
     for (let j = i + 1; j < moduli.length; j++) {
       if (gcd(moduli[i], moduli[j]) !== 1) return false;
@@ -99,28 +99,28 @@ export function verifyPairwiseCoprime(moduli: number[]): boolean {
  * @returns {CRTReturn} Object containing simplification steps, intermediate values, and final solution.
  * @throws {Error} If the moduli are not pairwise coprime.
  */
-export function solveCRT(system: Congruence[]): CRTReturn {
-  const canonical = system.map(eq => simplify(eq));
-  const moduli = canonical.map(c => c.original.m);
-  if (!verifyPairwiseCoprime(moduli)) {
+export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
+  const canonicalCongruences = system.map(eq => simplifyCongruence(eq));
+  const moduli = canonicalCongruences.map(c => c.originalCongruence.modulus);
+  if (!areModuliCoprime(moduli)) {
     throw new Error("Os módulos não são coprimos entre si.");
   }
-    
-  const M = moduli.reduce((acc, m) => acc * m, 1);
-  const steps = canonical.map(({ simplifiedRemainder: r, original: { m } }) => {
-    const M_i = M / m;
-    const inv = modInverse(M_i, m);
-    const term = r * M_i * inv;
-    return { remainder: r, modulus: m, partialProduct: M_i, inverse: inv, term };
+
+  const totalModulus = moduli.reduce((acc, m) => acc * m, 1);
+  const calculationSteps = canonicalCongruences.map(({ simplifiedRemainder, originalCongruence: { modulus } }) => {
+    const partialModulusProduct = totalModulus / modulus;
+    const modulusInverse = modInverse(partialModulusProduct, modulus);
+    const contributionTerm = simplifiedRemainder * partialModulusProduct * modulusInverse;
+    return { remainder: simplifiedRemainder, modulus, partialModulusProduct, modulusInverse, contributionTerm };
   });
-    
-  const weightedSum = steps.reduce((acc, { term }) => acc + term, 0);
-  const solution = ((weightedSum % M) + M) % M;
+
+  const weightedSum = calculationSteps.reduce((acc, { contributionTerm }) => acc + contributionTerm, 0);
+  const solution = ((weightedSum % totalModulus) + totalModulus) % totalModulus;
 
   return {
-    canonical,
-    totalModulus: M,
-    steps,
+    canonicalCongruences,
+    totalModulus,
+    calculationSteps,
     weightedSum,
     solution,
   };
