@@ -6,22 +6,23 @@ export type Congruence = {
     
 export type CanonicalStep = {
     originalCongruence: Congruence;
+    canonized: boolean;
     modulusInverse: number;
     simplifiedRemainder: number;
 };
 
-export type ContributionStep = {
+export type CRTStep = {
     remainder: number;
     modulus: number;
     partialModulusProduct: number;
     modulusInverse: number;
-    contributionTerm: number;
+    CRTTerm: number;
 };
 
 export type CRTReturn = {
-    canonicalCongruences : CanonicalStep[];
+    canonicalSteps : CanonicalStep[];
     totalModulus: number;
-    calculationSteps: ContributionStep[];
+    CRTSteps: CRTStep[];
     weightedSum: number;
     solution: number;
 };
