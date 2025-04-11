@@ -71,18 +71,29 @@ export function areModuliCoprime(moduli: number[]): boolean {
 /**
  * Simplifies a congruence of the form ax ≡ b (mod m) to x ≡ newRemainder (mod m),
  * where newRemainder is the result of multiplying the remainder 'b' by the modular inverse of 'a' modulo 'm'.
+ * It also changes the 'isCanonical' attribute of the equation to whether the transformation was needed or not.
  * @param {Congruence} eq - The original congruence.
  * @returns {CanonicalStep} The simplified congruence along with inverse and new remainder.
  */
 export function simplifyCongruence(eq: Congruence): CanonicalStep {
   const inv = modInverse(eq.coefficient, eq.modulus);
   const simplifiedRemainder = ((eq.remainder * inv) % eq.modulus + eq.modulus) % eq.modulus;
+
+  let updatedEq: Congruence;
+
+  if (inv === 1 && simplifiedRemainder === eq.remainder) {
+    updatedEq = eq;
+  } else {
+    updatedEq = { ...eq, isCanonical: true };
+  }
+
   return {
-    originalCongruence: eq,
+    originalCongruence: updatedEq,
     modulusInverse: inv,
     simplifiedRemainder,
   };
 }
+
 
 /**
  * Calculates the product of all moduli in a system of congruences.
@@ -124,9 +135,12 @@ function calculateSolution(calculationSteps: ContributionStep[], totalModulus: n
  * @param {Congruence[]} system - List of congruences.
  * @returns {CRTReturn} The solution of the system of congruences, including steps and the final solution.
  * @throws {Error} If the moduli are not coprime with each other.
+ * 
  */
 export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
   const canonicalCongruences = system.map(eq => simplifyCongruence(eq));
+
+
   const moduli = canonicalCongruences.map(c => c.originalCongruence.modulus);
 
   if (!areModuliCoprime(moduli)) {
@@ -136,7 +150,6 @@ export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
   const totalModulus = calculateTotalModulus(moduli);
   const calculationSteps = calculateContributionSteps(canonicalCongruences, totalModulus);
   const solution = calculateSolution(calculationSteps, totalModulus);
-
   const weightedSum = calculationSteps.reduce((acc, { contributionTerm }) => acc + contributionTerm, 0);
 
   return {
