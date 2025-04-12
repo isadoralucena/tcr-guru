@@ -18,19 +18,19 @@ export type CanonicalStep = {
     modularInverse?: number;
 };
 
-export type CrtStep = {
+export type CRTStep = {
     remainder: number;
     modulus: number;
     partialModulusProduct: number;
     modulusInverse: number;
-    crtTerm: number;
+    CRTTerm: number;
 };
 
-export type CrtReturn = {
+export type CRTReturn = {
     reduceSteps: ReduceStep[],
     canonicalSteps : CanonicalStep[];
     totalModulus: number;
-    crtSteps: CrtStep[];
+    CRTSteps: CRTStep[];
     weightedSum: number;
     solution: number;
 };

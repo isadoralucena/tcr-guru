@@ -1,4 +1,4 @@
-import { Congruence, ReduceStep, CanonicalStep, CrtStep, CrtReturn } from './Types';
+import { Congruence, ReduceStep, CanonicalStep, CRTStep, CRTReturn } from './Types';
 
 /**
  * Calculates the Greatest Common Divisor (GCD) of two numbers using the Euclidean algorithm.
@@ -52,8 +52,8 @@ export function areModuliCoprime(moduli: number[]): boolean {
 /**
  * Calculates the final solution of the system of congruences.
  */
-function calculateSolution(steps: CrtStep[], totalModulus: number): [number, number] {
-    const weightedSum = steps.reduce((acc, { crtTerm }) => acc + crtTerm, 0);
+function calculateSolution(steps: CRTStep[], totalModulus: number): [number, number] {
+    const weightedSum = steps.reduce((acc, { CRTTerm }) => acc + CRTTerm, 0);
     const solution = ((weightedSum % totalModulus) + totalModulus) % totalModulus;
     return [weightedSum, solution];
 }
@@ -70,7 +70,7 @@ function calculateTotalModulus(moduli: number[]): number {
  */
 function validateCongruences(congruences: Congruence[]): void {
     if (congruences.length === 0) {
-        throw new Error("O sistema de congruências está vazio. Forneça pelo menos uma congruência para resolver o sistema.");
+        throw new TypeError("O sistema de congruências está vazio. Forneça pelo menos uma congruência para resolver o sistema.");
     }
 
     const allIntegers = congruences.every(({coefficient, remainder, modulus}) =>
@@ -82,7 +82,7 @@ function validateCongruences(congruences: Congruence[]): void {
     );
 
     if (!allIntegers) {
-        throw new Error("As equações de congruência são inválidas. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo e a congruência deve ser não-trivial.");
+        throw new TypeError("As equações de congruência são inválidas. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo e a congruência deve ser não-trivial.");
     }
 }
 
@@ -167,21 +167,21 @@ function extractUniqueCongruences(canonicalSteps: CanonicalStep[]): Congruence[]
 /**
  * Calculates CRT steps for solving the system of congruences.
  */
-function calculateCrtSteps(
+function calculateCRTSteps(
     canonicalCongruences: Congruence[],
     totalModulus: number
-): CrtStep[] {
+): CRTStep[] {
     return canonicalCongruences.map(({ remainder, modulus }) => {
         const partialModulusProduct = totalModulus / modulus;
         const modulusInverse = modInverse(partialModulusProduct, modulus);
-        const crtTerm = remainder * partialModulusProduct * modulusInverse;
+        const CRTTerm = remainder * partialModulusProduct * modulusInverse;
 
         return {
             remainder: remainder,
             modulus,
             partialModulusProduct,
             modulusInverse,
-            crtTerm
+            CRTTerm
         };
     });
 }
@@ -189,7 +189,7 @@ function calculateCrtSteps(
 /**
  * Solves the Chinese Remainder Theorem (CRT) for a system of congruences.
  */
-export function solveChineseRemainderTheorem(system: Congruence[]): CrtReturn {
+export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
     validateCongruences(system);
 
     const reduceSteps = system.map(eq => reduceCongruence(eq));
@@ -202,7 +202,7 @@ export function solveChineseRemainderTheorem(system: Congruence[]): CrtReturn {
     }
     const totalModulus = calculateTotalModulus(moduli);
 
-    const crtSteps = calculateCrtSteps(finalCongruences, totalModulus);
+    const crtSteps = calculateCRTSteps(finalCongruences, totalModulus);
     const [weightedSum, solution] = calculateSolution(crtSteps, totalModulus);
 
     return {
