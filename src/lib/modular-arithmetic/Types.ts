@@ -3,26 +3,34 @@ export type Congruence = {
     remainder: number;
     modulus: number;
 };
-    
-export type CanonicalStep = {
+
+export type ReduceStep = {
     originalCongruence: Congruence;
-    canonized: boolean;
-    modulusInverse: number;
-    simplifiedRemainder: number;
+    reducedCongruence: Congruence;
+    wasDivided: boolean;
+    divider: number;
 };
 
-export type CRTStep = {
+export type CanonicalStep = {
+    originalCongruence: Congruence;
+    wasInverted: boolean;
+    finalCongruence: Congruence;
+    modularInverse?: number;
+};
+
+export type CrtStep = {
     remainder: number;
     modulus: number;
     partialModulusProduct: number;
     modulusInverse: number;
-    CRTTerm: number;
+    crtTerm: number;
 };
 
-export type CRTReturn = {
+export type CrtReturn = {
+    reduceSteps: ReduceStep[],
     canonicalSteps : CanonicalStep[];
     totalModulus: number;
-    CRTSteps: CRTStep[];
+    crtSteps: CrtStep[];
     weightedSum: number;
     solution: number;
 };
