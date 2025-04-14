@@ -66,6 +66,27 @@ function calculateTotalModulus(moduli: number[]): number {
 }
 
 /**
+ * Validates a single congruence.
+ */
+export function validateCongruence(congruence: Congruence): void {
+    const { coefficient, remainder, modulus } = congruence;
+
+    const isValid =
+        Number.isInteger(coefficient) &&
+        Number.isInteger(remainder) &&
+        Number.isInteger(modulus) &&
+        modulus > 0 &&
+        ((coefficient % modulus) + modulus) % modulus !== 0;
+
+    if (!isValid) {
+        throw new TypeError(
+            "Congruência inválida. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo " +
+            "e a congruência não pode ser trivial (coeficiente não nulo módulo m)."
+        );
+    }
+}
+
+/**
  * Validates if the provided congruences are valid.
  */
 export function validateCongruences(congruences: Congruence[]): void {
@@ -73,18 +94,9 @@ export function validateCongruences(congruences: Congruence[]): void {
         throw new TypeError("O sistema de congruências está vazio. Forneça pelo menos uma congruência para resolver o sistema.");
     }
 
-    const allIntegers = congruences.every(({coefficient, remainder, modulus}) =>
-        Number.isInteger(coefficient) &&
-        Number.isInteger(remainder) &&
-        Number.isInteger(modulus) &&
-        modulus > 0 &&
-        ((coefficient % modulus) + modulus) % modulus !== 0
-    );
-
-    if (!allIntegers) {
-        throw new TypeError("As equações de congruência são inválidas. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo e a congruência deve ser não-trivial.");
-    }
+    congruences.forEach(validateCongruence);
 }
+
 
 /**
  * Reduces a congruence of the form ax ≡ b (mod m) by:
@@ -189,7 +201,7 @@ function calculateCRTSteps(
 /**
  * Solves the Chinese Remainder Theorem (CRT) for a system of congruences.
  */
-export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
+export function solveCRT(system: Congruence[]): CRTReturn {
     validateCongruences(system);
 
     const reduceSteps = system.map(eq => reduceCongruence(eq));
@@ -213,25 +225,6 @@ export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
         weightedSum,
         solution
     };
-}
-
-/**
- * Validates a single congruence.
- */
-export function validateCongruence(congruence: Congruence): void {
-    const { coefficient, remainder, modulus } = congruence;
-
-    const isValid =
-        Number.isInteger(coefficient) &&
-        Number.isInteger(remainder) &&
-        Number.isInteger(modulus);
-
-    if (!isValid) {
-        throw new TypeError(
-            "Congruência inválida. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo " +
-            "e a congruência não pode ser trivial (coeficiente não nulo módulo m)."
-        );
-    }
 }
 
 /**
