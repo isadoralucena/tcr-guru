@@ -89,10 +89,10 @@ const Calculator = () => {
     return (
         <section className="flex flex-col my-10 items-center justify-center h-full w-full text-center">
             <img className="h-30 mb-3" src={illustration} alt="Imagem de um homem pensativo segurando uma bola de cristal" />
-            <div className="flex flex-col shadow-md bg-primary-light p-5 w-[75%] h-[50vh] h-auto rounded-2xl">
+            <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[700px] mx-auto px-4 shadow-md bg-primary-light p-5 rounded-2xl">
                 <div className="flex flex-row justify-evenly">
                     <div className="flex flex-col items-center rounded-xl ">
-                        <p className="text-2sm font-primary text-white mb-2">Teorema do resto chinês</p>
+                        <p className="text-2sm font-primary text-white mb-2">Teorema Chinês do Resto</p>
                         <input type="radio" onChange={() => changeMode('CRT')} defaultChecked name="mode" className="w-4 h-4 shadow-xl cursor-pointer appearance-none bg-white border-4 border-white rounded-full checked:bg-primary checked:scale-120 transition-all duration-500 ease-in-out" />
                     </div>
                     <div className="flex flex-col items-center rounded-xl ">

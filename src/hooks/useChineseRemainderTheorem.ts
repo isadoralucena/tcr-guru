@@ -105,7 +105,7 @@ export function useChineseRemainderTheorem(system: Congruence[]) {
             };
         });
 
-        setSteps((prevSteps) => [...prevSteps, { step: 'Etapas do teorema do resto chinês', crtSteps }]);
+        setSteps((prevSteps) => [...prevSteps, { step: 'Etapas do Teorema Chinês do Resto', crtSteps }]);
 
         const [weightedSum, solution] = calculateSolution(crtSteps, totalModulus);
         setSolution(solution);

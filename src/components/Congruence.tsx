@@ -25,7 +25,12 @@ export function Congruence({
 					type="number"
 					value={congruence.coefficient}
 					onChange={(e) => onChange(index, "coefficient", Number(e.target.value))}
-					className="w-20 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
+					onKeyDown={(e) => {
+						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+							e.preventDefault();
+						}
+					}}					
+					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
 				/>
 				<MathJax>
 					<span>{`\\( x \\equiv \\)`}</span>
@@ -34,21 +39,30 @@ export function Congruence({
 					type="number"
 					value={congruence.remainder}
 					onChange={(e) => onChange(index, "remainder", Number(e.target.value))}
-					className="w-20 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
+					onKeyDown={(e) => {
+						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+							e.preventDefault();
+						}
+					}}					
+					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
 				/>
 				<MathJax>
-					<span>{`\\( \\operatorname{mod}( \\)`}</span>
+					<span>{`\\( (\\text{mod} \\)`}</span>
 				</MathJax>
 				<input
 					type="number"
 					value={congruence.modulus}
 					onChange={(e) => onChange(index, "modulus", Number(e.target.value))}
-					className="w-20 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
+					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
+					onKeyDown={(e) => {
+						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+							e.preventDefault();
+						}
+					}}				 
 				/>
 				<MathJax>
-					<span>{`\\( ) \\)`}</span>
+					<span>{`\\()\\)`}</span>
 				</MathJax>
-
 				{canRemove && (
 					<button
 						onClick={() => onRemove(index)}

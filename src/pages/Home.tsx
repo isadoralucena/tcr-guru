@@ -12,7 +12,7 @@ const Home = () => {
                     Boas vindas ao Guru do TCR!
                 </h1>
                 <p className="m-3 text-sm font-primary text-primary">
-                    O Teorema do Resto Chinês é uma ferramenta matemática eficiente para resolver sistemas de congruências, sendo essencial na criptografia moderna, como no algoritmo RSA.
+                    O Teorema Chinês do Resto é uma ferramenta matemática eficiente para resolver sistemas de congruências, sendo essencial na criptografia moderna, como no algoritmo RSA.
                 </p>
 
                 <p className="m-1 text-sm font-primary text-primary">

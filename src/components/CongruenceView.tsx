@@ -17,9 +17,11 @@ export function CongruenceView({
                     </MathJax>
                 )}
 
-                <MathJax>
-                    <span className="max-w-[4rem] text-center">{`\\( ${congruence.coefficient} \\)`}</span>
-                </MathJax>
+				{congruence.coefficient !== 1 && (
+				  <MathJax>
+					<span className="max-w-[4rem] text-center">{`\\( ${congruence.coefficient} \\)`}</span>
+				  </MathJax>
+				)}
 
                 <MathJax>
                     <span>{`\\( x \\equiv \\)`}</span>
@@ -30,7 +32,7 @@ export function CongruenceView({
                 </MathJax>
 
                 <MathJax>
-                    <span>{`\\( \\operatorname{mod}( ${congruence.modulus} ) \\)`}</span>
+                    <span>{`\\( \\pmod{${congruence.modulus}} \\)`}</span>
                 </MathJax>
             </div>
         </MathJaxContext>

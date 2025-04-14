@@ -49,7 +49,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                 ]
 
                                 break;
-                            case 'Etapas do teorema do resto chinês':
+                            case 'Etapas do Teorema Chinês do Resto':
                                 const canonical = steps[1].canonicalSteps
                                     .map((canonical: any, i: number) => <CongruenceView key={i} congruence={canonical.finalCongruence} />)
 
