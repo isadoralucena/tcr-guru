@@ -7,7 +7,7 @@ Web application that solves the Chinese Remainder Theorem.
 - [Vite](https://vitejs.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - HTML5
-- CSS3
+- React and Tailwind
 
 ## 📦 Installation and usage
 
