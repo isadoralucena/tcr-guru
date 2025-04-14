@@ -50,7 +50,7 @@ const Materials = () => {
         <div className="mt-6">
           <h3 className="text-xl font-medium mb-2">Relatório Didático:</h3>
           <p>
-            Você pode acessar um relatório didático completo sobre o Teorema Chinês do Resto clicando no link abaixo:
+            Você pode acessar um material escrito completo sobre o Teorema Chinês do Resto clicando no link abaixo:
           </p>
           <a
             href="https://docs.google.com/document/d/1jUm_yt_1ZGKBxBTMe9jTbwK2W6gPNYPXc1pqSUDxKvc/edit?usp=sharing"
@@ -58,7 +58,7 @@ const Materials = () => {
             rel="noopener noreferrer"
             className="text-blue-500 hover:underline"
           >
-            Relatório Didático - Teorema Chinês do Resto
+            TCR Descomplicado 
           </a>
         </div>
 
