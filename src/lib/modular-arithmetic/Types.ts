@@ -34,3 +34,5 @@ export type CRTReturn = {
     weightedSum: number;
     solution: number;
 };
+
+export type Mode = 'CRT' | 'INVERSE';

@@ -68,7 +68,7 @@ function calculateTotalModulus(moduli: number[]): number {
 /**
  * Validates if the provided congruences are valid.
  */
-function validateCongruences(congruences: Congruence[]): void {
+export function validateCongruences(congruences: Congruence[]): void {
     if (congruences.length === 0) {
         throw new TypeError("O sistema de congruências está vazio. Forneça pelo menos uma congruência para resolver o sistema.");
     }
@@ -214,4 +214,57 @@ export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
         solution
     };
 }
- 
+
+/**
+ * Validates a single congruence.
+ */
+export function validateCongruence(congruence: Congruence): void {
+    const { coefficient, remainder, modulus } = congruence;
+
+    const isValid =
+        Number.isInteger(coefficient) &&
+        Number.isInteger(remainder) &&
+        Number.isInteger(modulus);
+
+    if (!isValid) {
+        throw new TypeError(
+            "Congruência inválida. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo " +
+            "e a congruência não pode ser trivial (coeficiente não nulo módulo m)."
+        );
+    }
+}
+
+/**
+ * Solves a single modular inverse problem by processing a single congruence.
+ */
+export function solveModularInverse(congruence: Congruence): {
+    reduceStep: ReduceStep;
+    canonicalStep: CanonicalStep;
+    solution: number;
+} {
+    validateCongruence(congruence);
+
+    if (congruence.coefficient === 1) {
+        throw new Error("O coeficiente da congruência já é 1, portanto, a equação já está na forma canônica e não é necessário calcular o inverso modular.");
+    }
+
+    const gcdValue = gcd(congruence.coefficient, congruence.modulus);
+    if (gcdValue !== 1) {
+        throw new Error(`Não existe inverso de ${congruence.coefficient} módulo ${congruence.modulus}, pois o cálculo do MDC entre ${congruence.coefficient} e ${congruence.modulus} foi diferente de 1.`);
+    }
+
+    const reduceStep = reduceCongruence(congruence);
+
+    if (reduceStep.reducedCongruence.coefficient === 1) {
+        throw new Error("Após a redução, o coeficiente da congruência se tornou 1, portanto, a equação já está na forma canônica e não é necessário calcular o inverso modular.");
+    }
+
+    const canonicalStep = canonizeCongruence(reduceStep.reducedCongruence);
+    const solution = canonicalStep.finalCongruence.remainder;
+
+    return {
+        reduceStep,
+        canonicalStep,
+        solution
+    };
+}
