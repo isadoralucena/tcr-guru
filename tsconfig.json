@@ -18,7 +18,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* React JSX support */
+    "jsx": "react-jsx",
+	"allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }

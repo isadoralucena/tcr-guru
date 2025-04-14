@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Secular+One&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #40227F;
+    --color-primary-light: #63309A;
+    --color-primary-dark: #200B4C;
+    --color-bg: #EFE3FA;
+
+    --color-secondary: #D9D9D9;
+
+    --color-error: #F9BDA3;
+    --color-error-contrast: #390303;
+
+    --color-warning: #F6F9A3;
+    --color-warning-contrast: #7E8400;
+
+    --font-primary: 'Roboto';
+    --font-secondary: 'Secular One';
+}
+
+body {
+    background-color: var(--color-bg);
+    padding: 0;
+    margin: 0;
+}
+
+input[type="number"].no-spinner {
+    -moz-appearance: textfield;
+
+}
+
+input[type="number"].no-spinner::-webkit-outer-spin-button,
+input[type="number"].no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
