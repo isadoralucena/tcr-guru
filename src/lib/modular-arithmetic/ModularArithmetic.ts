@@ -202,14 +202,14 @@ export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
     }
     const totalModulus = calculateTotalModulus(moduli);
 
-    const crtSteps = calculateCRTSteps(finalCongruences, totalModulus);
-    const [weightedSum, solution] = calculateSolution(crtSteps, totalModulus);
+    const CRTSteps = calculateCRTSteps(finalCongruences, totalModulus);
+    const [weightedSum, solution] = calculateSolution(CRTSteps, totalModulus);
 
     return {
         reduceSteps,
         canonicalSteps,
         totalModulus,
-        crtSteps,
+        CRTSteps,
         weightedSum,
         solution
     };
