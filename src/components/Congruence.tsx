@@ -18,13 +18,25 @@ export function Congruence({
 	const isFirstEquation = id < 3;
 	const canRemove = !isFirstEquation && !disableRemove;
 
+	const handleOnChange = (
+		index: number, 
+		field: keyof CongruenceType, 
+		e: React.ChangeEvent<HTMLInputElement>
+	  ) => {
+		const newValue = Number(e.target.value.replace(/^0+/, '') || '0');
+	  
+		onChange(index, field, newValue);
+	  };
+	  
+	
 	return (
 		<MathJaxContext>
 			<div className="flex items-center space-x-4 mt-3">
 				<input
-					type="number"
-					value={congruence.coefficient}
-					onChange={(e) => onChange(id, "coefficient", Number(e.target.value))}
+					type="text"
+					value={congruence.coefficient || ""}
+					onChange={(e) => handleOnChange(id, "coefficient", e)}
+
 					onKeyDown={(e) => {
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 							e.preventDefault();
@@ -36,9 +48,9 @@ export function Congruence({
 					<span>{`\\( x \\equiv \\)`}</span>
 				</MathJax>
 				<input
-					type="number"
-					value={congruence.remainder}
-					onChange={(e) => onChange(id, "remainder", Number(e.target.value))}
+					type="text"
+					value={congruence.remainder || ""}
+					onChange={(e) => handleOnChange(id, "remainder", e)}
 					onKeyDown={(e) => {
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 							e.preventDefault();
@@ -50,9 +62,9 @@ export function Congruence({
 					<span>{`\\( (\\text{mod} \\)`}</span>
 				</MathJax>
 				<input
-					type="number"
-					value={congruence.modulus}
-					onChange={(e) => onChange(id, "modulus", Number(e.target.value))}
+					type="text"
+					value={congruence.modulus || ""}
+					onChange={(e) => handleOnChange(id, "modulus", e)}
 					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
 					onKeyDown={(e) => {
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
