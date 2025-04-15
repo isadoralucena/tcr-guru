@@ -37,26 +37,18 @@ const Calculator = () => {
         inverseSolver.clear();
         setSolutionVisible(false);
         setInvSolutionVisible(false);
+    
         try {
             switch (mode) {
                 case 'CRT':
                     solve();
                     setSolutionVisible(true);
                     break;
-
+    
                 case 'INVERSE':
-                    inverseSolver.solve(congruences[0]);
-                    if (inverseSolver.error) {
-                        setError({
-                            type: 'inverse-error',
-                            message: inverseSolver.error || 'Erro ao calcular o inverso modular.'
-                        });
-                        setInvSolutionVisible(false);
-                    } else {
-                        setInvSolutionVisible(true);
-                    }
+                    inverseSolver.solve(congruences[0]); // erro vai subir agora!
+                    setInvSolutionVisible(true);
                     break;
-
             }
         } catch (err: any) {
             setError({
@@ -67,8 +59,6 @@ const Calculator = () => {
             setInvSolutionVisible(false);
         }
     };
-
-
 
     useEffect(() => {
         setError(null);
@@ -88,21 +78,37 @@ const Calculator = () => {
 
     return (
         <section className="flex flex-col my-10 items-center justify-center h-full w-full text-center">
-            <img className="h-30 mb-3" src={illustration} alt="Imagem de um homem pensativo segurando uma bola de cristal" />
+            <img
+                className="h-30 mb-3"
+                src={illustration}
+                alt="Imagem de um homem pensativo segurando uma bola de cristal"
+            />
+    
             <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[700px] mx-auto px-4 shadow-md bg-primary-light p-5 rounded-2xl">
                 <div className="flex flex-row justify-evenly">
-                    <div className="flex flex-col items-center rounded-xl ">
+                    <div className="flex flex-col items-center rounded-xl">
                         <p className="text-2sm font-primary text-white mb-2">Teorema Chinês do Resto</p>
-                        <input type="radio" onChange={() => changeMode('CRT')} defaultChecked name="mode" className="w-4 h-4 shadow-xl cursor-pointer appearance-none bg-white border-4 border-white rounded-full checked:bg-primary checked:scale-120 transition-all duration-500 ease-in-out" />
+                        <input
+                            type="radio"
+                            onChange={() => changeMode('CRT')}
+                            defaultChecked
+                            name="mode"
+                            className="w-4 h-4 shadow-xl cursor-pointer appearance-none bg-white border-4 border-white rounded-full checked:bg-primary checked:scale-120 transition-all duration-500 ease-in-out"
+                        />
                     </div>
-                    <div className="flex flex-col items-center rounded-xl ">
+                    <div className="flex flex-col items-center rounded-xl">
                         <p className="text-2sm font-primary text-white mb-2">Inverso</p>
-                        <input type="radio" onChange={() => changeMode('INVERSE')} name="mode" className="w-4 h-4 shadow-xl cursor-pointer appearance-none bg-white border-4 border-white rounded-full checked:bg-primary checked:scale-120 transition-all duration-500 ease-in-out" />
+                        <input
+                            type="radio"
+                            onChange={() => changeMode('INVERSE')}
+                            name="mode"
+                            className="w-4 h-4 shadow-xl cursor-pointer appearance-none bg-white border-4 border-white rounded-full checked:bg-primary checked:scale-120 transition-all duration-500 ease-in-out"
+                        />
                     </div>
                 </div>
-
+    
                 <div className="mt-3 p-5 bg-white h-auto flex-1 rounded-2xl shadow-md w-full overflow-auto">
-                    <div className=" flex flex-row space-x-4 justify-center items-center">
+                    <div className="flex flex-row space-x-4 justify-center items-center">
                         <div className="flex flex-row space-x-4 justify-center items-center">
                             <AnimatePresence mode="wait">
                                 {mode === 'CRT' && (
@@ -112,33 +118,36 @@ const Calculator = () => {
                                 )}
                             </AnimatePresence>
                             <ButtonLink onClick={handleCalculate}>Calcular</ButtonLink>
-
                         </div>
                     </div>
-
+    
                     <div className="mt-6 flex flex-col space-y-4">
-                        {congruences
-                            .map((congruence, index) => {
-                                return (
-                                    <Congruence
-                                        key={index}
-                                        index={index}
-                                        congruence={congruence}
-                                        onChange={updateCongruence}
-                                        onRemove={removeCongruence}
-                                        disableRemove={mode === 'INVERSE' || congruences.length <= 2}
-                                    />
-                                )
-                            })}
+                        {congruences.map((congruence, index) => (
+                            <Congruence
+                                key={index}
+                                index={index}
+                                congruence={congruence}
+                                onChange={updateCongruence}
+                                onRemove={removeCongruence}
+                                disableRemove={mode === 'INVERSE' || congruences.length <= 2}
+                            />
+                        ))}
                     </div>
-
-                    {(solutionVisible && mode === 'CRT' && solution !== null) && <CRTSolution solution={solution} steps={steps} />}
-                    {(invSolutionVisible && mode === 'INVERSE' && inverseSolver.error === null) && <InverseSolution
-                        reduceStep={inverseSolver.reduceStep}
-                        canonicalStep={inverseSolver.canonicalStep}
-                        error={inverseSolver.error}
-                    />}
-
+    
+                    {(solutionVisible && mode === 'CRT' && solution !== null) && (
+                        <CRTSolution solution={solution} steps={steps} />
+                    )}
+    
+                    {(invSolutionVisible &&
+                        mode === 'INVERSE' &&
+                        inverseSolver.reduceStep !== null &&
+                        inverseSolver.canonicalStep !== null) && (
+                        <InverseSolution
+                            reduceStep={inverseSolver.reduceStep}
+                            canonicalStep={inverseSolver.canonicalStep}
+                        />
+                    )}
+    
                     {error && (
                         <motion.div {...fadeInOut}>
                             <Error type={error.type} message={error.message} />
@@ -148,6 +157,5 @@ const Calculator = () => {
             </div>
         </section>
     );
-}
-
+    
 export default Calculator;
