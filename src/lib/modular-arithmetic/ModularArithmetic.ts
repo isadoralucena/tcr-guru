@@ -107,6 +107,7 @@ export function reduceCongruence(eq: Congruence): ReduceStep {
         coefficient: ((eq.coefficient % eq.modulus) + eq.modulus) % eq.modulus,
         remainder: ((eq.remainder % eq.modulus) + eq.modulus) % eq.modulus,
         modulus: eq.modulus,
+        id: eq.id,
     }
     const wasSimplified = (normalized.coefficient !== eq.coefficient) || (normalized.remainder !== eq.remainder);
 
@@ -117,6 +118,7 @@ export function reduceCongruence(eq: Congruence): ReduceStep {
             coefficient: normalized.coefficient / divider,
             remainder: normalized.remainder / divider,
             modulus: normalized.modulus / divider,
+            id: eq.id,
         }
         : normalized;
 
@@ -142,6 +144,7 @@ export function canonizeCongruence(eq: Congruence): CanonicalStep {
             coefficient: 1,
             remainder: ((b * modularInverse!) % m + m) % m,
             modulus: m,
+            id: eq.id,
         }
         : eq;
 
@@ -181,14 +184,13 @@ function calculateCRTSteps(
     canonicalCongruences: Congruence[],
     totalModulus: number
 ): CRTStep[] {
-    return canonicalCongruences.map(({ remainder, modulus }) => {
-        const partialModulusProduct = totalModulus / modulus;
-        const modulusInverse = modInverse(partialModulusProduct, modulus);
-        const CRTTerm = remainder * partialModulusProduct * modulusInverse;
+    return canonicalCongruences.map((congruence) => {
+        const partialModulusProduct = totalModulus / congruence.modulus;
+        const modulusInverse = modInverse(partialModulusProduct, congruence.modulus);
+        const CRTTerm = congruence.remainder * partialModulusProduct * modulusInverse;
 
         return {
-            remainder: remainder,
-            modulus,
+            equation: congruence,
             partialModulusProduct,
             modulusInverse,
             CRTTerm

@@ -46,7 +46,7 @@ const Calculator = () => {
                     break;
     
                 case 'INVERSE':
-                    inverseSolver.solve(congruences[0]); // erro vai subir agora!
+                    inverseSolver.solve(congruences[0]);
                     setInvSolutionVisible(true);
                     break;
             }
@@ -65,10 +65,10 @@ const Calculator = () => {
         setSolutionVisible(false);
         setInvSolutionVisible(false);
 
-        updateCongruence(0, 'coefficient', 1);
-        updateCongruence(0, 'modulus', 1);
-        updateCongruence(0, 'remainder', 1);
-        for (let i = congruences.length - 1; i > 0; i--) removeCongruence(i);
+        updateCongruence(1, 'coefficient', 1);
+        updateCongruence(1, 'modulus', 1);
+        updateCongruence(1, 'remainder', 1);
+        for (let i = 1; i <= congruences.length; i++) removeCongruence(i);
 
         setSteps([]);
         setSolution(null);
@@ -122,10 +122,10 @@ const Calculator = () => {
                     </div>
     
                     <div className="mt-6 flex flex-col space-y-4 ml-6">
-                        {congruences.map((congruence, index) => (
-                            <div key={index}>
+                        {congruences.map((congruence, i) => (
+                            <div key={i}>
                                 <Congruence
-                                    index={index}
+                                    id={congruence.id}
                                     congruence={congruence}
                                     onChange={updateCongruence}
                                     onRemove={removeCongruence}

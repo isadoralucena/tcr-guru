@@ -9,7 +9,7 @@ interface SolutionProps {
     canonicalStep: CanonicalStep | null;
 }
 
-export default function InverseSolution({ reduceStep, canonicalStep, error }: SolutionProps) {
+export default function InverseSolution({ reduceStep, canonicalStep }: SolutionProps) {
     console.log(reduceStep, canonicalStep)
     return (
         <div className="mt-6 p-6  space-y-4">
