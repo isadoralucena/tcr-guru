@@ -231,33 +231,14 @@ export function solveCRT(system: Congruence[]): CRTReturn {
  * Solves a single modular inverse problem by processing a single congruence.
  */
 export function solveModularInverse(congruence: Congruence): {
-    reduceStep: ReduceStep;
-    canonicalStep: CanonicalStep;
-    solution: number;
+    inverse: number;
+    congruence: Congruence;
 } {
     validateCongruence(congruence);
 
-    if (congruence.coefficient === 1) {
-        throw new Error("O coeficiente da congruência já é 1, portanto, a equação já está na forma canônica e não é necessário calcular o inverso modular.");
-    }
-
-    const gcdValue = gcd(congruence.coefficient, congruence.modulus);
-    if (gcdValue !== 1) {
-        throw new Error(`Não existe inverso de ${congruence.coefficient} módulo ${congruence.modulus}, pois o cálculo do MDC entre ${congruence.coefficient} e ${congruence.modulus} foi diferente de 1.`);
-    }
-
-    const reduceStep = reduceCongruence(congruence);
-
-    if (reduceStep.reducedCongruence.coefficient === 1) {
-        throw new Error("Após a redução, o coeficiente da congruência se tornou 1, portanto, a equação já está na forma canônica e não é necessário calcular o inverso modular.");
-    }
-
-    const canonicalStep = canonizeCongruence(reduceStep.reducedCongruence);
-    const solution = canonicalStep.finalCongruence.remainder;
-
+    const inverse = modInverse(congruence.coefficient, congruence.modulus);
     return {
-        reduceStep,
-        canonicalStep,
-        solution
+        inverse,
+        congruence
     };
 }
