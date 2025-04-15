@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Congruence as CongruenceType } from './lib/modular-arithmetic/Types';
+import { Congruence as CongruenceType } from '../lib/modular-arithmetic/Types';
 
 export function useCongruenceList(initial?: CongruenceType[]) {
 	const [congruences, setCongruences] = useState<CongruenceType[]>(

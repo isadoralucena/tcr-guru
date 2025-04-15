@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Congruence, CRTReturn } from './Types';
+import { Congruence, CRTReturn }from '../lib/modular-arithmetic/Types';
 import { solveCRT } from '../lib/modular-arithmetic/ModularArithmetic';
 
 export function useChineseRemainderTheorem(system: Congruence[]) {

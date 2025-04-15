@@ -1,4 +1,4 @@
-import { Congruence as CongruenceType } from './lib/modular-arithmetic/Types';
+import { Congruence as CongruenceType } from '../lib/modular-arithmetic/Types';
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 
 interface CongruenceProps {
