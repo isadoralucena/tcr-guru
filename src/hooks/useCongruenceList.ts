@@ -13,7 +13,6 @@ export function useCongruenceList(mode: 'CRT' | 'INVERSE', initial?: Congruence[
         : [{ coefficient: 1, remainder: 1, modulus: 1 }]
   );
 
-  // Atualiza automaticamente o número de congruências ao trocar de modo
   useEffect(() => {
     if (mode === 'CRT' && congruences.length < 2) {
       setCongruences([

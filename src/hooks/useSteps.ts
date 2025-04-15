@@ -7,7 +7,6 @@ type Step = {
   };
   
   export function useSteps(congruenceData, crtData) {
-    // Recebe os dados calculados pelos outros hooks e monta os passos
     const steps: Step[] = [
       {
         title: "Transformar as equações que são não canônicas",

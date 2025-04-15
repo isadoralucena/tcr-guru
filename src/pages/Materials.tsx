@@ -4,7 +4,7 @@ import { MathJaxContext, MathJax } from "better-react-mathjax";
 const Materials = () => {
   return (
     <MathJaxContext>
-      <div className="flex flex-col shadow-md p-7 w-[90%] max-w-4xl mx-auto rounded-2xl bg-white space-y-6">
+      <div className="flex flex-col shadow-md p-7 w-[90%] my-6 max-w-4xl mx-auto rounded-2xl bg-white space-y-6">
         
         <div className="space-y-3">
           <h2 className="text-2xl font-semibold">Introdução ao Teorema Chinês do Resto</h2>

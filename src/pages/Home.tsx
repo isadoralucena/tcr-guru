@@ -6,18 +6,20 @@ import { motion } from 'framer-motion';
 const Home = () => {
     return (
         <section className="flex flex-col items-center justify-center h-full text-center">
-            <img className="h-50" src={illustration} alt="Imagem de um homem sorridente segurando uma bola de cristal" />
-            <div className="flex flex-col items-center text-center justify-center mx-75">
-                <h1 className="text-4xl font-secondary text-primary">
+            <img className="h-50 sm:h-40 md:h-48 lg:h-50" src={illustration} alt="Imagem de um homem sorridente segurando uma bola de cristal" />
+
+            <div className="flex flex-col items-center text-center justify-center sm:mx-10 md:mx-20 lg:mx-75">
+                <h1 className="text-3xl sm:text-3xl mx-4 md:text-4xl lg:text-4xl font-secondary text-primary">
                     Boas vindas ao Guru do TCR!
                 </h1>
-                <p className="m-3 text-sm font-primary text-primary">
+                <p className="m-3 text-sm sm:text-base mx-4 md:text-lg font-primary text-primary">
                     O Teorema Chinês do Resto é uma ferramenta matemática eficiente para resolver sistemas de congruências, sendo essencial na criptografia moderna, como no algoritmo RSA.
                 </p>
 
-                <p className="m-1 text-sm font-primary text-primary">
+                <p className="m-2 text-sm sm:text-base mx-6 md:text-lg font-primary text-primary">
                     Esses cálculos podem ser difíceis, mas o Guru do TCR veio para te ajudar!
                 </p>
+
                 <motion.div
                     className="m-5"
                     initial={{ opacity: 0, scale: 0.8 }}

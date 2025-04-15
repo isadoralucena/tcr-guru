@@ -13,7 +13,7 @@ export function CongruenceView({
             <div className="flex items-center justify-center mt-3 space-x-1">
                 {invertIndex && (
                     <MathJax>
-                        <span className="max-w-[4rem] text-center">{`\\( M_{${invertIndex}} \\)`}</span>
+                        <span className="max-w-[4rem] text-center">{`\\( I_{${invertIndex}}\\)`}</span>
                     </MathJax>
                 )}
 

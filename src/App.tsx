@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import Calculator from './pages/Calculator'
 import Materials from './pages/Materials'
+import { Menu, X } from 'lucide-react';
 
 function App() {
     return (

@@ -157,5 +157,6 @@ const Calculator = () => {
             </div>
         </section>
     );
+}
     
 export default Calculator;
