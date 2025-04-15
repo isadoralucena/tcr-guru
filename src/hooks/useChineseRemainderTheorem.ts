@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Congruence, CRTReturn }from '../lib/modular-arithmetic/Types';
+import { Congruence, CRTReturn } from '../lib/modular-arithmetic/Types';
 import { solveCRT } from '../lib/modular-arithmetic/ModularArithmetic';
 
-export function useChineseRemainderTheorem(system: Congruence[]) {
+export function useChineseRemainderTheorem() {
     const [steps, setSteps] = useState<any[]>([]);
     const [solution, setSolution] = useState<number | null>(null);
 
-    const solve = () => {
+    const solve = (system: Congruence[]) => {
         const result: CRTReturn = solveCRT(system);
 
         setSteps([

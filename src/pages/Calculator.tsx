@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import illustration from '../assets/calculator-illustration.svg';
 import { useCalculatorMode } from '../hooks/useCalculatorMode';
 import { useCongruenceList } from '../hooks/useCongruenceList';
@@ -7,7 +6,6 @@ import { Congruence } from '../components/Congruence';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useChineseRemainderTheorem } from '../hooks/useChineseRemainderTheorem';
 import { useState, useEffect } from 'react';
-import { Congruence as CongruenceType } from '../lib/modular-arithmetic/Types';
 import CRTSolution from '../components/CRTSolution';
 import { useModularInverseSolver } from '../hooks/useModularInverseSolver';
 import InverseSolution from '../components/InverseSolution';
@@ -21,9 +19,10 @@ const fadeInOut = {
 };
 
 const Calculator = () => {
+    const [renderKey, setRenderKey] = useState(0);
     const { mode, changeMode } = useCalculatorMode();
     const { congruences, addCongruence, removeCongruence, updateCongruence } = useCongruenceList(mode);
-    const { steps, solution, solve, setSteps, setSolution } = useChineseRemainderTheorem(congruences as CongruenceType[]);
+    const { steps, solution, solve, setSteps, setSolution } = useChineseRemainderTheorem();
     const inverseSolver = useModularInverseSolver()
 
     const [solutionVisible, setSolutionVisible] = useState(false);
@@ -41,7 +40,8 @@ const Calculator = () => {
         try {
             switch (mode) {
                 case 'CRT':
-                    solve();
+                    solve(congruences);
+                    setRenderKey(prev => prev + 1);
                     setSolutionVisible(true);
                     break;
     
@@ -121,21 +121,22 @@ const Calculator = () => {
                         </div>
                     </div>
     
-                    <div className="mt-6 flex flex-col space-y-4">
+                    <div className="mt-6 flex flex-col space-y-4 ml-6">
                         {congruences.map((congruence, index) => (
-                            <Congruence
-                                key={index}
-                                index={index}
-                                congruence={congruence}
-                                onChange={updateCongruence}
-                                onRemove={removeCongruence}
-                                disableRemove={mode === 'INVERSE' || congruences.length <= 2}
-                            />
+                            <div key={index}>
+                                <Congruence
+                                    index={index}
+                                    congruence={congruence}
+                                    onChange={updateCongruence}
+                                    onRemove={removeCongruence}
+                                    disableRemove={mode === 'INVERSE' || congruences.length <= 2}
+                                />
+                            </div>
                         ))}
                     </div>
-    
+
                     {(solutionVisible && mode === 'CRT' && solution !== null) && (
-                        <CRTSolution solution={solution} steps={steps} />
+                        <CRTSolution key={renderKey} solution={solution} steps={steps} />
                     )}
     
                     {(invSolutionVisible &&

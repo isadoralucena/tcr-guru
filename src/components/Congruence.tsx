@@ -63,14 +63,19 @@ export function Congruence({
 				<MathJax>
 					<span>{`\\()\\)`}</span>
 				</MathJax>
-				{canRemove && (
-					<button
-						onClick={() => onRemove(index)}
-						className="cursor-pointer ml-2 text-red-600 hover:underline text-sm"
-					>
-						Remover
-					</button>
-				)}
+				<div className="flex items-center">
+					<MathJax>
+						<span className="text-gray-500 text-sm font-primary mr-4">{`\\((${index + 1})\\)`}</span>
+					</MathJax>
+					{canRemove && (
+						<button
+							onClick={() => onRemove(index)}
+							className="cursor-pointer text-red-600 hover:underline text-sm"
+						>
+							Remover
+						</button>
+					)}
+				</div>
 			</div>
 		</MathJaxContext>
 	);

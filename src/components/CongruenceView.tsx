@@ -2,29 +2,24 @@ import { Congruence as CongruenceType } from '../lib/modular-arithmetic/Types';
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 
 interface CongruenceProps {
-    congruence: CongruenceType
-    invertIndex?: number
+    congruence: CongruenceType;
+    eqIndex?: number;
+    variable?: string;
 }
 export function CongruenceView({
-    congruence, invertIndex
+    congruence, eqIndex, variable = 'x'
 }: CongruenceProps) {
     return (
         <MathJaxContext>
-            <div className="flex items-center justify-center mt-3 space-x-1">
-                {invertIndex && (
+            <div className="flex items-center justify-center mb-3 space-x-1">
+                {congruence.coefficient !== 1 && (
                     <MathJax>
-                        <span className="max-w-[4rem] text-center">{`\\( I_{${invertIndex}}\\)`}</span>
+                        <span className="max-w-[4rem] text-center">{`\\( ${congruence.coefficient} \\)`}</span>
                     </MathJax>
                 )}
 
-				{congruence.coefficient !== 1 && (
-				  <MathJax>
-					<span className="max-w-[4rem] text-center">{`\\( ${congruence.coefficient} \\)`}</span>
-				  </MathJax>
-				)}
-
                 <MathJax>
-                    <span>{`\\( x \\equiv \\)`}</span>
+                    <span>{`\\( ${variable} \\equiv \\)`}</span>
                 </MathJax>
 
                 <MathJax>
@@ -34,6 +29,12 @@ export function CongruenceView({
                 <MathJax>
                     <span>{`\\( \\pmod{${congruence.modulus}} \\)`}</span>
                 </MathJax>
+
+                {eqIndex !== undefined && (
+                    <MathJax>
+                        <span className="ml-2 text-sm text-gray-600">{`\\((${eqIndex})\\)`}</span>
+                    </MathJax>
+                )}
             </div>
         </MathJaxContext>
     );
