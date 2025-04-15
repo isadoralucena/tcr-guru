@@ -71,17 +71,15 @@ function calculateTotalModulus(moduli: number[]): number {
 export function validateCongruence(congruence: Congruence): void {
     const { coefficient, remainder, modulus } = congruence;
 
-    const isValid =
-        Number.isInteger(coefficient) &&
-        Number.isInteger(remainder) &&
-        Number.isInteger(modulus) &&
-        modulus > 0 &&
-        ((coefficient % modulus) + modulus) % modulus !== 0;
-
-    if (!isValid) {
+    const isNumber = Number.isInteger(coefficient) && Number.isInteger(remainder) && Number.isInteger(modulus);
+    if (!isNumber) {
+        throw new TypeError("O coeficiente, resto e módulo das congruências devem ser inteiros.");
+    }
+    
+    const isTrivial = modulus <= 0 || ((coefficient % modulus) + modulus) % modulus === 0
+    if (isTrivial) {
         throw new TypeError(
-            "Congruência inválida. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo " +
-            "e a congruência não pode ser trivial (coeficiente não nulo módulo m)."
+            "Os coeficientes das congruências não devem ser nulos no módulo informado."
         );
     }
 }
@@ -207,6 +205,10 @@ export function solveCRT(system: Congruence[]): CRTReturn {
     const reduceSteps = system.map(eq => reduceCongruence(eq));
     const canonicalSteps = reduceSteps.map(({reducedCongruence}) => canonizeCongruence(reducedCongruence));
     const finalCongruences = extractUniqueCongruences(canonicalSteps);
+
+    if (finalCongruences.length <= 1) {
+        throw new Error("Não há equações o suficiente para aplicar o TCR de forma não trivial. Provavelmente há congruências equivalentes na entrada.");
+    }
 
     const moduli = finalCongruences.map((congruence) => congruence.modulus);
     if (!areModuliCoprime(moduli)) {
