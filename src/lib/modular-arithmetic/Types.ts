@@ -7,7 +7,7 @@ export type Congruence = {
 export type ReduceStep = {
     originalCongruence: Congruence;
     reducedCongruence: Congruence;
-    wasDivided: boolean;
+    wasReduced: boolean;
     divider: number;
 };
 

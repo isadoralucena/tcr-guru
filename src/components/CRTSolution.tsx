@@ -30,7 +30,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                         switch (step.step) {
                             case 'Redução das Congruências':
                                 result = step.reduceSteps
-                                    .filter((reduceStep: any) => reduceStep.wasDivided)
+                                    .filter((reduceStep: any) => reduceStep.wasReduced)
                                     .map((reduceStep: any, i: number) => <CongruenceView key={i} congruence={reduceStep.reducedCongruence} />)
                                 break;
 

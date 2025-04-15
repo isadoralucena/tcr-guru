@@ -110,11 +110,11 @@ export function reduceCongruence(eq: Congruence): ReduceStep {
         remainder: ((eq.remainder % eq.modulus) + eq.modulus) % eq.modulus,
         modulus: eq.modulus,
     }
+    const wasSimplified = (normalized.coefficient !== eq.coefficient) || (normalized.remainder !== eq.remainder);
 
     const divider = gcd(normalized.coefficient, normalized.modulus);
     const canDivide = normalized.coefficient !== 1 && divider > 1 && normalized.remainder % divider === 0;
-    
-    const reduced: Congruence = canDivide
+    const finalCongruence: Congruence = canDivide
         ? {
             coefficient: normalized.coefficient / divider,
             remainder: normalized.remainder / divider,
@@ -124,8 +124,8 @@ export function reduceCongruence(eq: Congruence): ReduceStep {
 
     return {
         originalCongruence: eq,
-        reducedCongruence: reduced,
-        wasDivided: canDivide,
+        reducedCongruence: finalCongruence,
+        wasReduced: canDivide || wasSimplified,
         divider: divider,
     };
 }
