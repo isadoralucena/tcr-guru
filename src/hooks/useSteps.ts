@@ -23,7 +23,7 @@ type Step = {
         ],
       },
       {
-        title: "Calcular o Teorema do Resto Chinês",
+        title: "Calcular o Teorema do Chinês do Resto",
         substeps: [
           {
             title: "Módulo total",
