@@ -7,6 +7,7 @@ interface CongruenceProps {
 	onChange: (id: number, field: keyof CongruenceType, value: number) => void;
 	onRemove: (id: number) => void;
 	disableRemove?: boolean;
+	mode?: string;
 }
 export function Congruence({
 	congruence,
@@ -14,21 +15,22 @@ export function Congruence({
 	onChange,
 	onRemove,
 	disableRemove,
+	mode,
 }: CongruenceProps) {
 	const isFirstEquation = id < 3;
 	const canRemove = !isFirstEquation && !disableRemove;
 
 	const handleOnChange = (
-		index: number, 
-		field: keyof CongruenceType, 
+		index: number,
+		field: keyof CongruenceType,
 		e: React.ChangeEvent<HTMLInputElement>
-	  ) => {
+	) => {
 		const newValue = Number(e.target.value.replace(/^0+/, '') || '0');
-	  
+
 		onChange(index, field, newValue);
-	  };
-	  
-	
+	};
+
+
 	return (
 		<MathJaxContext>
 			<div className="flex items-center space-x-4 mt-3">
@@ -41,13 +43,13 @@ export function Congruence({
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 							e.preventDefault();
 						}
-					}}					
+					}}
 					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
 				/>
 				<MathJax>
 					<span>{`\\( x \\equiv \\)`}</span>
 				</MathJax>
-				<input
+				{mode != 'INVERSE' ? (<input
 					type="text"
 					value={congruence.remainder || ""}
 					onChange={(e) => handleOnChange(id, "remainder", e)}
@@ -55,9 +57,14 @@ export function Congruence({
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 							e.preventDefault();
 						}
-					}}					
+					}}
 					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
 				/>
+				): (
+					<MathJax>
+					  <span>{`\\( 1 \\)`}</span>
+					</MathJax>
+				  )}
 				<MathJax>
 					<span>{`\\( (\\text{mod} \\)`}</span>
 				</MathJax>
@@ -70,7 +77,7 @@ export function Congruence({
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 							e.preventDefault();
 						}
-					}}				 
+					}}
 				/>
 				<MathJax>
 					<span>{`\\()\\)`}</span>

@@ -36,7 +36,6 @@ const Calculator = () => {
         inverseSolver.clear();
         setSolutionVisible(false);
         setInvSolutionVisible(false);
-    
         try {
             switch (mode) {
                 case 'CRT':
@@ -44,15 +43,15 @@ const Calculator = () => {
                     setRenderKey(prev => prev + 1);
                     setSolutionVisible(true);
                     break;
-    
                 case 'INVERSE':
                     inverseSolver.solve(congruences[0]);
                     setInvSolutionVisible(true);
                     break;
             }
         } catch (err: any) {
+            const errorType = err instanceof TypeError ? 'type-error' : 'general-error';
             setError({
-                type: 'general-error',
+                type: errorType,
                 message: err.message || 'Erro desconhecido durante o cálculo.'
             });
             setSolutionVisible(false);
@@ -76,6 +75,7 @@ const Calculator = () => {
         inverseSolver.clear();
     }, [mode]);
 
+
     return (
         <section className="flex flex-col my-10 items-center justify-center h-full w-full text-center">
             <img
@@ -83,7 +83,7 @@ const Calculator = () => {
                 src={illustration}
                 alt="Imagem de um homem pensativo segurando uma bola de cristal"
             />
-    
+
             <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[700px] mx-auto px-4 shadow-md bg-primary-light p-5 rounded-2xl">
                 <div className="flex flex-row justify-evenly">
                     <div className="flex flex-col items-center rounded-xl">
@@ -106,7 +106,7 @@ const Calculator = () => {
                         />
                     </div>
                 </div>
-    
+
                 <div className="mt-3 p-5 bg-white h-auto flex-1 rounded-2xl shadow-md w-full overflow-auto">
                     <div className="flex flex-row space-x-4 justify-center items-center">
                         <div className="flex flex-row space-x-4 justify-center items-center">
@@ -120,7 +120,7 @@ const Calculator = () => {
                             <ButtonLink onClick={handleCalculate}>Calcular</ButtonLink>
                         </div>
                     </div>
-    
+
                     <div className="mt-6 flex flex-col space-y-4 ml-6">
                         {congruences.map((congruence, i) => (
                             <div key={i}>
@@ -130,6 +130,7 @@ const Calculator = () => {
                                     onChange={updateCongruence}
                                     onRemove={removeCongruence}
                                     disableRemove={mode === 'INVERSE' || congruences.length <= 2}
+                                    mode={mode}
                                 />
                             </div>
                         ))}
@@ -138,17 +139,16 @@ const Calculator = () => {
                     {(solutionVisible && mode === 'CRT' && solution !== null) && (
                         <CRTSolution key={renderKey} solution={solution} steps={steps} />
                     )}
-    
-                    {(invSolutionVisible &&
-                        mode === 'INVERSE' &&
-                        inverseSolver.reduceStep !== null &&
-                        inverseSolver.canonicalStep !== null) && (
-                        <InverseSolution
-                            reduceStep={inverseSolver.reduceStep}
-                            canonicalStep={inverseSolver.canonicalStep}
-                        />
-                    )}
-    
+
+                    {
+                        invSolutionVisible && mode === 'INVERSE' &&(
+                            <InverseSolution
+                                inverse={inverseSolver.inverse}
+                                congruence={inverseSolver.congruence}
+                            />
+                        )
+                    }
+
                     {error && (
                         <motion.div {...fadeInOut}>
                             <Error type={error.type} message={error.message} />
@@ -159,5 +159,4 @@ const Calculator = () => {
         </section>
     );
 }
-    
 export default Calculator;
