@@ -76,10 +76,13 @@ export function validateCongruence(congruence: Congruence): void {
         throw new TypeError("O coeficiente, resto e módulo das congruências devem ser inteiros.");
     }
     
-    const isTrivial = modulus <= 0 || ((coefficient % modulus) + modulus) % modulus === 0
-    if (isTrivial) {
+    if(modulus < 1){
+        throw new TypeError("Os módulos das congruências devem ser maior que 1.");
+    }
+    
+    if (((coefficient % modulus) + modulus) % modulus === 0) {
         throw new TypeError(
-            "Os coeficientes das congruências não devem ser nulos no módulo informado."
+            "Congruências inválidsa: os coeficientes não podem ser múltiplos dos módulos."
         );
     }
 }
