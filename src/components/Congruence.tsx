@@ -33,7 +33,7 @@ export function Congruence({
 
 	return (
 		<MathJaxContext>
-			<div className="flex items-center space-x-4 mt-3">
+			<div className="flex items-center space-x-2 mt-3 text-base sm:text-sm overflow-x-auto">
 				<input
 					type="text"
 					value={congruence.coefficient || ""}
@@ -82,14 +82,14 @@ export function Congruence({
 				<MathJax>
 					<span>{`\\()\\)`}</span>
 				</MathJax>
-				<div className="flex items-center">
+				<div className="flex items-center space-x-2">
 					<MathJax>
-						<span className="text-gray-500 text-sm font-primary mr-4">{`\\((${id})\\)`}</span>
+						<span className="text-gray-500 text-sm sm:text-xs font-primary flex items-center h-full">{`\\((${id})\\)`}</span>
 					</MathJax>
 					{canRemove && (
 						<button
 							onClick={() => onRemove(id)}
-							className="cursor-pointer text-red-600 hover:underline text-sm"
+							className="cursor-pointer text-red-600 hover:underline text-sm sm:text-xs flex items-center"
 						>
 							Remover
 						</button>
