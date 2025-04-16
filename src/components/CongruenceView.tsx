@@ -3,11 +3,10 @@ import { MathJaxContext, MathJax } from "better-react-mathjax";
 
 interface CongruenceProps {
     congruence: CongruenceType;
-    eqIndex?: number;
     variable?: string;
 }
 export function CongruenceView({
-    congruence, eqIndex, variable = 'x'
+    congruence, variable = 'x'
 }: CongruenceProps) {
     return (
         <MathJaxContext>
@@ -30,9 +29,9 @@ export function CongruenceView({
                     <span>{`\\( \\pmod{${congruence.modulus}} \\)`}</span>
                 </MathJax>
 
-                {eqIndex !== undefined && (
+                {congruence.id !== undefined && (
                     <MathJax>
-                        <span className="ml-2 text-sm text-gray-600">{`\\((${eqIndex})\\)`}</span>
+                        <span className="ml-2 text-sm text-gray-600">{`\\((${congruence.id})\\)`}</span>
                     </MathJax>
                 )}
             </div>

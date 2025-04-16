@@ -1,6 +1,6 @@
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 import { CongruenceView } from "./CongruenceView";
-import { Congruence as CongruenceType } from "../lib/modular-arithmetic/Types";
+import { Congruence as CongruenceType, CRTStep } from "../lib/modular-arithmetic/Types";
 import { Ratio } from "./Ratio";
 
 interface SolutionProps {
@@ -24,7 +24,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
             <div className="mt-4">
                 <h3 className="text-2xl font-primary font-bold text-primary">Etapas do Teorema Chinês do Resto:</h3>
                 <ul className="space-y-2">
-                    {steps.map((step, index) => {
+                    {steps.map((step, i) => {
                         let result = []
 
                         switch (step.step) {
@@ -32,7 +32,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                 result = step.reduceSteps
                                     .map((reduceStep: any, i: any) => 
                                         reduceStep.wasReduced 
-                                        ? <CongruenceView key={i} congruence={reduceStep.reducedCongruence} eqIndex={i + 1} />
+                                        ? <CongruenceView key={i} congruence={reduceStep.reducedCongruence}/>
                                         : null
                                     )
                                     .filter((item: any) => item !== null)
@@ -42,7 +42,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                 result = step.canonicalSteps
                                     .map((canonicalStep: any, i: any) =>
                                         canonicalStep.wasInverted
-                                        ? <CongruenceView key={i} congruence={canonicalStep.finalCongruence} eqIndex={i + 1} />
+                                        ? <CongruenceView key={i} congruence={canonicalStep.finalCongruence} />
                                         : null
                                     )
                                     .filter((item: any) => item !== null)
@@ -51,29 +51,30 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                             case 'Etapas do Teorema Chinês do Resto':
                                 const canonical = steps[1].canonicalSteps
                                     .map((canonical: any, i: any) =>
-                                        <CongruenceView key={i} congruence={canonical.finalCongruence} eqIndex={i + 1} />
+                                        <CongruenceView key={i} congruence={canonical.finalCongruence} />
                                     )
 
-                                const ratios = step.crtSteps.map((crtStep: any, i: number) => (
+                                const ratios = step.crtSteps.map((crtStep: CRTStep) => (
                                     <div key={i} className="mb-5">
-                                        <Ratio crtStep={crtStep} index={i + 1} totalModulus={steps[2].totalModulus} />
+                                        <Ratio crtStep={crtStep} totalModulus={steps[2].totalModulus} />
                                     </div>
                                 ))
 
-                                const inverts = step.crtSteps.map((crtStep: any, i: number) => {
+                                const inverts = step.crtSteps.map((crtStep: CRTStep, i: number) => {
                                     const congruence: CongruenceType = {
                                         coefficient: crtStep.partialModulusProduct,
-                                        modulus: crtStep.modulus,
-                                        remainder: 1
+                                        modulus: crtStep.equation.modulus,
+                                        remainder: 1,
+                                        id: crtStep.equation.id,
                                     }
 
                                     return (
                                         <div key={i}>
-                                            <CongruenceView congruence={congruence} eqIndex={i + 1} variable={`I_{${i + 1}}`} />
+                                            <CongruenceView congruence={congruence} variable={`I_{${congruence.id}}`} />
                                             <div className="flex items-center justify-center my-2">
                                                 <MathJaxContext>
                                                     <MathJax>
-                                                        {`\\(I_${i + 1} = ${crtStep.modulusInverse} \\)`}
+                                                        {`\\(I_${congruence.id} = ${crtStep.modulusInverse} \\)`}
                                                     </MathJax>
                                                 </MathJaxContext>
                                             </div>
@@ -81,19 +82,19 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                     )
                                 })
 
-                                const interProductLabeled = step.crtSteps.map((crtStep: any, i: number) =>
-                                    `R_{${i + 1}} \\cdot N_{${i + 1}} \\cdot I_{${i + 1}}`
+                                const interProductLabeled = step.crtSteps.map((crtStep: CRTStep, i: number) =>
+                                    `R_{${crtStep.equation.id}} \\cdot N_{${crtStep.equation.id}} \\cdot I_{${crtStep.equation.id}}`
                                 ).join(' + ')
                                 
                                 const interProductValues = step.crtSteps.map((crtStep: any) =>
-                                    `${crtStep.remainder} \\cdot ${crtStep.partialModulusProduct} \\cdot ${crtStep.modulusInverse}`
+                                    `${crtStep.equation.modulus} \\cdot ${crtStep.partialModulusProduct} \\cdot ${crtStep.modulusInverse}`
                                 ).join(' + ')
                                 
                                 const crtTerms = step.crtSteps.map((crtStep: any) => `${crtStep.CRTTerm}`).join(' + ')
                                 
                                 const weigthedSum = step.crtSteps.reduce(
                                     (acc: any, crtStep: any) =>
-                                        acc + (crtStep.remainder * crtStep.partialModulusProduct * crtStep.modulusInverse),
+                                        acc + (crtStep.equation.remainder * crtStep.partialModulusProduct * crtStep.modulusInverse),
                                     0
                                 )
 
@@ -159,7 +160,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                         }
 
                         return (
-                            <div key={index}>
+                            <div key={i}>
                                 {result.length === 0 ? null : (
                                     <li className="bg-bg p-4 rounded-lg shadow-md">
                                         {step.step !== 'Etapas do Teorema Chinês do Resto' && (

@@ -3,17 +3,16 @@ import { MathJaxContext, MathJax } from "better-react-mathjax";
 
 interface RatioProps {
     crtStep: CRTType
-    index: number
     totalModulus: number
 }
 export function Ratio({
-    crtStep, index, totalModulus
+    crtStep, totalModulus
 }: RatioProps) {
     return (
         <MathJaxContext>
             {/* <div className="flex mx-auto items-center space-x-4 mt-3"> */}
                 <MathJax>
-                    {`\\(N_{${index}} = \\frac{${totalModulus}}{${crtStep.modulus}} = ${crtStep.partialModulusProduct}\\)`}
+                    {`\\(N_{${crtStep.equation.id}} = \\frac{${totalModulus}}{${crtStep.equation.modulus}} = ${crtStep.partialModulusProduct}\\)`}
                 </MathJax>
             {/* </div> */}
         </MathJaxContext>

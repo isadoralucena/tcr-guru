@@ -2,22 +2,22 @@ import { Congruence as CongruenceType } from "../lib/modular-arithmetic/Types";
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 
 interface CongruenceProps {
-	index: number;
+	id: number;
 	congruence: CongruenceType;
-	onChange: (index: number, field: keyof CongruenceType, value: number) => void;
-	onRemove: (index: number) => void;
+	onChange: (id: number, field: keyof CongruenceType, value: number) => void;
+	onRemove: (id: number) => void;
 	disableRemove?: boolean;
 	mode?: string;
 }
 export function Congruence({
 	congruence,
-	index,
+	id,
 	onChange,
 	onRemove,
 	disableRemove,
 	mode,
 }: CongruenceProps) {
-	const isFirstEquation = index < 2;
+	const isFirstEquation = id < 3;
 	const canRemove = !isFirstEquation && !disableRemove;
 
 	const handleOnChange = (
@@ -37,7 +37,7 @@ export function Congruence({
 				<input
 					type="text"
 					value={congruence.coefficient || ""}
-					onChange={(e) => handleOnChange(index, "coefficient", e)}
+					onChange={(e) => handleOnChange(id, "coefficient", e)}
 
 					onKeyDown={(e) => {
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -52,7 +52,7 @@ export function Congruence({
 				{mode != 'INVERSE' ? (<input
 					type="text"
 					value={congruence.remainder || ""}
-					onChange={(e) => handleOnChange(index, "remainder", e)}
+					onChange={(e) => handleOnChange(id, "remainder", e)}
 					onKeyDown={(e) => {
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
 							e.preventDefault();
@@ -71,7 +71,7 @@ export function Congruence({
 				<input
 					type="text"
 					value={congruence.modulus || ""}
-					onChange={(e) => handleOnChange(index, "modulus", e)}
+					onChange={(e) => handleOnChange(id, "modulus", e)}
 					className="w-12 no-spinner border-0 border-b-1 focus:outline-none p-1 text-center"
 					onKeyDown={(e) => {
 						if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -84,11 +84,11 @@ export function Congruence({
 				</MathJax>
 				<div className="flex items-center">
 					<MathJax>
-						<span className="text-gray-500 text-sm font-primary mr-4">{`\\((${index + 1})\\)`}</span>
+						<span className="text-gray-500 text-sm font-primary mr-4">{`\\((${id})\\)`}</span>
 					</MathJax>
 					{canRemove && (
 						<button
-							onClick={() => onRemove(index)}
+							onClick={() => onRemove(id)}
 							className="cursor-pointer text-red-600 hover:underline text-sm"
 						>
 							Remover

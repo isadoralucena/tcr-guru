@@ -2,6 +2,7 @@ export type Congruence = {
     coefficient: number;
     remainder: number;
     modulus: number;
+    id: number;
 };
 
 export type ReduceStep = {
@@ -19,8 +20,7 @@ export type CanonicalStep = {
 };
 
 export type CRTStep = {
-    remainder: number;
-    modulus: number;
+    equation: Congruence;
     partialModulusProduct: number;
     modulusInverse: number;
     CRTTerm: number;
