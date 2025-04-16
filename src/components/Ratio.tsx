@@ -1,4 +1,4 @@
-import { CRTStep as CRTType } from './lib/modular-arithmetic/Types';
+import { CRTStep as CRTType } from '../lib/modular-arithmetic/Types';
 import { MathJaxContext, MathJax } from "better-react-mathjax";
 
 interface RatioProps {

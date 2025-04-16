@@ -10,7 +10,7 @@ type HookResult = {
 };
 
 export function useModularInverseSolver(): HookResult {
-	const [congruence, setCongruence] = useState<Congruence>({ coefficient: 0, modulus: 0, remainder: 1 });
+	const [congruence, setCongruence] = useState<Congruence>({ coefficient: 0, modulus: 0, remainder: 1, id: 1});
 	const [inverse, setInverse] = useState<number>(0);
 
 	const solve = useCallback((cong: Congruence) => {
@@ -20,7 +20,7 @@ export function useModularInverseSolver(): HookResult {
 	}, []);
 
 	const clear = useCallback(() => {
-		setCongruence({ coefficient: 0, modulus: 0, remainder: 1 });
+		setCongruence({ coefficient: 0, modulus: 0, remainder: 1, id: 1});
 		setInverse(0);
 	}, []);
 

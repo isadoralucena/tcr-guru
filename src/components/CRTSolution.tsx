@@ -82,7 +82,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                     )
                                 })
 
-                                const interProductLabeled = step.crtSteps.map((crtStep: CRTStep, i: number) =>
+                                const interProductLabeled = step.crtSteps.map((crtStep: CRTStep) =>
                                     `R_{${crtStep.equation.id}} \\cdot N_{${crtStep.equation.id}} \\cdot I_{${crtStep.equation.id}}`
                                 ).join(' + ')
                                 
