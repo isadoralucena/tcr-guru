@@ -87,7 +87,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                 ).join(' + ')
                                 
                                 const interProductValues = step.crtSteps.map((crtStep: any) =>
-                                    `${crtStep.equation.modulus} \\cdot ${crtStep.partialModulusProduct} \\cdot ${crtStep.modulusInverse}`
+                                    `${crtStep.equation.remainder} \\cdot ${crtStep.partialModulusProduct} \\cdot ${crtStep.modulusInverse}`
                                 ).join(' + ')
                                 
                                 const crtTerms = step.crtSteps.map((crtStep: any) => `${crtStep.CRTTerm}`).join(' + ')
