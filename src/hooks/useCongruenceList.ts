@@ -7,43 +7,54 @@ export function useCongruenceList(mode: 'CRT' | 'INVERSE', initial?: Congruence[
       ? initial
       : mode === 'CRT'
         ? [
-            { coefficient: 1, remainder: 1, modulus: 1 },
-            { coefficient: 1, remainder: 1, modulus: 1 }
+            { coefficient: 1, remainder: 1, modulus: 1, id: 1 },
+            { coefficient: 1, remainder: 1, modulus: 1, id: 2 }
           ]
-        : [{ coefficient: 1, remainder: 1, modulus: 1 }]
+        : [{ coefficient: 1, remainder: 1, modulus: 1, id: 1 }]
   );
 
-  // Atualiza automaticamente o número de congruências ao trocar de modo
   useEffect(() => {
     if (mode === 'CRT' && congruences.length < 2) {
       setCongruences([
-        { coefficient: 1, remainder: 1, modulus: 1 },
-        { coefficient: 1, remainder: 1, modulus: 1 }
+        { coefficient: 1, remainder: 1, modulus: 1, id: 1 },
+        { coefficient: 1, remainder: 1, modulus: 1, id: 2 }
       ]);
     } else if (mode === 'INVERSE' && congruences.length !== 1) {
-      setCongruences([{ coefficient: 1, remainder: 1, modulus: 1 }]);
+      setCongruences([{ coefficient: 1, remainder: 1, modulus: 1, id: 1 }]);
     }
   }, [mode]);
 
-  const updateCongruence = (index: number, field: keyof Congruence, value: number) => {
+  const updateCongruence = (id: number, field: keyof Congruence, value: number) => {
     setCongruences(prev =>
-      prev.map((c, i) => (i === index ? { ...c, [field]: value } : c))
+      prev.map(c => c.id === id ? { ...c, [field]: value } : c)
     );
   };
 
+
   const addCongruence = () => {
     if (mode === 'CRT') {
-      setCongruences(prev => [...prev, { coefficient: 1, remainder: 1, modulus: 1 }]);
-    }
-  };
-
-  const removeCongruence = (index: number) => {
-    if (mode === 'CRT') {
       setCongruences(prev =>
-        prev.length > 2 ? prev.filter((_, i) => i !== index) : prev
+        reindexCongruences([...prev, { coefficient: 1, remainder: 1, modulus: 1, id: 1 }])
       );
     }
   };
+  
+
+  const removeCongruence = (id: number) => {
+    if (mode === 'CRT') {
+      setCongruences(prev => {
+        if (prev.length <= 2) return prev;
+        return reindexCongruences(prev.filter(c => c.id !== id));
+      });
+    }
+  };
+  
+  function reindexCongruences(congruences: Congruence[]): Congruence[] {
+    return congruences.map((c, i) => ({
+      ...c,
+      id: i + 1,
+    }));
+  }
 
   return {
     congruences,

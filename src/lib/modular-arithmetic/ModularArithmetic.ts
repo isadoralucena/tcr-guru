@@ -66,6 +66,28 @@ function calculateTotalModulus(moduli: number[]): number {
 }
 
 /**
+ * Validates a single congruence.
+ */
+export function validateCongruence(congruence: Congruence): void {
+    const { coefficient, remainder, modulus } = congruence;
+
+    const isNumber = Number.isInteger(coefficient) && Number.isInteger(remainder) && Number.isInteger(modulus);
+    if (!isNumber) {
+        throw new TypeError("O coeficiente, resto e módulo das congruências devem ser inteiros.");
+    }
+    
+    if(modulus < 1){
+        throw new TypeError("Os módulos das congruências devem ser maior que 1.");
+    }
+    
+    if (((coefficient % modulus) + modulus) % modulus === 0) {
+        throw new TypeError(
+            "Congruências inválidsa: os coeficientes não podem ser múltiplos dos módulos."
+        );
+    }
+}
+
+/**
  * Validates if the provided congruences are valid.
  */
 export function validateCongruences(congruences: Congruence[]): void {
@@ -73,18 +95,9 @@ export function validateCongruences(congruences: Congruence[]): void {
         throw new TypeError("O sistema de congruências está vazio. Forneça pelo menos uma congruência para resolver o sistema.");
     }
 
-    const allIntegers = congruences.every(({coefficient, remainder, modulus}) =>
-        Number.isInteger(coefficient) &&
-        Number.isInteger(remainder) &&
-        Number.isInteger(modulus) &&
-        modulus > 0 &&
-        ((coefficient % modulus) + modulus) % modulus !== 0
-    );
-
-    if (!allIntegers) {
-        throw new TypeError("As equações de congruência são inválidas. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo e a congruência deve ser não-trivial.");
-    }
+    congruences.forEach(validateCongruence);
 }
+
 
 /**
  * Reduces a congruence of the form ax ≡ b (mod m) by:
@@ -97,23 +110,25 @@ export function reduceCongruence(eq: Congruence): ReduceStep {
         coefficient: ((eq.coefficient % eq.modulus) + eq.modulus) % eq.modulus,
         remainder: ((eq.remainder % eq.modulus) + eq.modulus) % eq.modulus,
         modulus: eq.modulus,
+        id: eq.id,
     }
+    const wasSimplified = (normalized.coefficient !== eq.coefficient) || (normalized.remainder !== eq.remainder);
 
     const divider = gcd(normalized.coefficient, normalized.modulus);
     const canDivide = normalized.coefficient !== 1 && divider > 1 && normalized.remainder % divider === 0;
-    
-    const reduced: Congruence = canDivide
+    const finalCongruence: Congruence = canDivide
         ? {
             coefficient: normalized.coefficient / divider,
             remainder: normalized.remainder / divider,
             modulus: normalized.modulus / divider,
+            id: eq.id,
         }
         : normalized;
 
     return {
         originalCongruence: eq,
-        reducedCongruence: reduced,
-        wasDivided: canDivide,
+        reducedCongruence: finalCongruence,
+        wasReduced: canDivide || wasSimplified,
         divider: divider,
     };
 }
@@ -132,6 +147,7 @@ export function canonizeCongruence(eq: Congruence): CanonicalStep {
             coefficient: 1,
             remainder: ((b * modularInverse!) % m + m) % m,
             modulus: m,
+            id: eq.id,
         }
         : eq;
 
@@ -171,14 +187,13 @@ function calculateCRTSteps(
     canonicalCongruences: Congruence[],
     totalModulus: number
 ): CRTStep[] {
-    return canonicalCongruences.map(({ remainder, modulus }) => {
-        const partialModulusProduct = totalModulus / modulus;
-        const modulusInverse = modInverse(partialModulusProduct, modulus);
-        const CRTTerm = remainder * partialModulusProduct * modulusInverse;
+    return canonicalCongruences.map((congruence) => {
+        const partialModulusProduct = totalModulus / congruence.modulus;
+        const modulusInverse = modInverse(partialModulusProduct, congruence.modulus);
+        const CRTTerm = congruence.remainder * partialModulusProduct * modulusInverse;
 
         return {
-            remainder: remainder,
-            modulus,
+            equation: congruence,
             partialModulusProduct,
             modulusInverse,
             CRTTerm
@@ -189,12 +204,16 @@ function calculateCRTSteps(
 /**
  * Solves the Chinese Remainder Theorem (CRT) for a system of congruences.
  */
-export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
+export function solveCRT(system: Congruence[]): CRTReturn {
     validateCongruences(system);
 
     const reduceSteps = system.map(eq => reduceCongruence(eq));
     const canonicalSteps = reduceSteps.map(({reducedCongruence}) => canonizeCongruence(reducedCongruence));
     const finalCongruences = extractUniqueCongruences(canonicalSteps);
+
+    if (finalCongruences.length <= 1) {
+        throw new Error("Não há equações o suficiente para aplicar o TCR de forma não trivial. Provavelmente há congruências equivalentes na entrada.");
+    }
 
     const moduli = finalCongruences.map((congruence) => congruence.modulus);
     if (!areModuliCoprime(moduli)) {
@@ -216,55 +235,17 @@ export function solveChineseRemainderTheorem(system: Congruence[]): CRTReturn {
 }
 
 /**
- * Validates a single congruence.
- */
-export function validateCongruence(congruence: Congruence): void {
-    const { coefficient, remainder, modulus } = congruence;
-
-    const isValid =
-        Number.isInteger(coefficient) &&
-        Number.isInteger(remainder) &&
-        Number.isInteger(modulus);
-
-    if (!isValid) {
-        throw new TypeError(
-            "Congruência inválida. Coeficiente, resto e módulo devem ser inteiros, o módulo deve ser positivo " +
-            "e a congruência não pode ser trivial (coeficiente não nulo módulo m)."
-        );
-    }
-}
-
-/**
  * Solves a single modular inverse problem by processing a single congruence.
  */
 export function solveModularInverse(congruence: Congruence): {
-    reduceStep: ReduceStep;
-    canonicalStep: CanonicalStep;
-    solution: number;
+    inverse: number;
+    congruence: Congruence;
 } {
     validateCongruence(congruence);
 
-    if (congruence.coefficient === 1) {
-        throw new Error("O coeficiente da congruência já é 1, portanto, a equação já está na forma canônica e não é necessário calcular o inverso modular.");
-    }
-
-    const gcdValue = gcd(congruence.coefficient, congruence.modulus);
-    if (gcdValue !== 1) {
-        throw new Error(`Não existe inverso de ${congruence.coefficient} módulo ${congruence.modulus}, pois o cálculo do MDC entre ${congruence.coefficient} e ${congruence.modulus} foi diferente de 1.`);
-    }
-
-    const reduceStep = reduceCongruence(congruence);
-
-    if (reduceStep.reducedCongruence.coefficient === 1) {
-        throw new Error("Após a redução, o coeficiente da congruência se tornou 1, portanto, a equação já está na forma canônica e não é necessário calcular o inverso modular.");
-    }
-
-    const canonicalStep = canonizeCongruence(reduceStep.reducedCongruence);
-    const solution = canonicalStep.finalCongruence.remainder;
-
+    const inverse = modInverse(congruence.coefficient, congruence.modulus);
     return {
-        reduceStep,
-        canonicalStep,
-        solution
+        inverse,
+        congruence
     };
 }

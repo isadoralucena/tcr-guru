@@ -1,56 +1,33 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Congruence, CanonicalStep, ReduceStep } from './../lib/modular-arithmetic/Types';
+import { useState, useCallback } from 'react';
+import { Congruence } from './../lib/modular-arithmetic/Types';
 import { solveModularInverse } from './../lib/modular-arithmetic/ModularArithmetic';
 
 type HookResult = {
-  reduceStep: ReduceStep | null;
-  canonicalStep: CanonicalStep | null;
-  error: string | null;
-  solution: number | null;
-  solve: (congruence: Congruence) => void;
-  clear: () => void;
+	congruence: Congruence;
+	inverse: number;
+	solve: (congruence: Congruence) => void;
+	clear: () => void;
 };
 
 export function useModularInverseSolver(): HookResult {
-  const [reduceStep, setReduceStep] = useState<ReduceStep | null>(null);
-  const [canonicalStep, setCanonicalStep] = useState<CanonicalStep | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [solution, setSolution] = useState<number | null>(null);
+	const [congruence, setCongruence] = useState<Congruence>({ coefficient: 0, modulus: 0, remainder: 1 });
+	const [inverse, setInverse] = useState<number>(0);
 
-  const solve = useCallback((congruence: Congruence) => {
-    try {
-      const { reduceStep, canonicalStep, solution } = solveModularInverse(congruence);
+	const solve = useCallback((cong: Congruence) => {
+		const { inverse, congruence } = solveModularInverse(cong);
+		setCongruence(congruence);
+		setInverse(inverse);
+	}, []);
 
-      setReduceStep(reduceStep);
-      setCanonicalStep(canonicalStep);
-      setSolution(solution);
+	const clear = useCallback(() => {
+		setCongruence({ coefficient: 0, modulus: 0, remainder: 1 });
+		setInverse(0);
+	}, []);
 
-      setError(null);
-
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erro desconhecido';
-      setError(message);
-      setReduceStep(null);
-      setCanonicalStep(null);
-      setSolution(null);
-      console.error(message);
-    }
-  }, []);
-
-  const clear = () => {
-    setReduceStep(null);
-    setCanonicalStep(null);
-    setError(null);
-    setSolution(null);
-  };
-
-  return {
-    reduceStep,
-    canonicalStep,
-    error,
-    solution,
-    solve,
-    clear
-  };
+	return {
+		congruence,
+		inverse,
+		solve,
+		clear
+	};
 }
-

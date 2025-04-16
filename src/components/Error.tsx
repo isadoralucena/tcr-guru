@@ -4,7 +4,7 @@ interface ErrorProps {
 }
 
 export default function Error({ type, message }: ErrorProps) {
-    const className = type == 'type-error' ?
+    const className = type  == 'type-error' ?
         'font-primary my-6 bg-warning text-warning-contrast border-1 border-warning-contrast px-6 py-3 rounded-xl inline-block'
         : 'font-primary my-6 bg-error text-error-contrast border-1 border-error-contrast px-6 py-3 rounded-xl inline-block'
     return (
