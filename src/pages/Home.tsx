@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import illustration from '../assets/home-illustration.svg';
 import { ButtonLink } from '../components/ButtonLink';
 import { motion } from 'framer-motion';
