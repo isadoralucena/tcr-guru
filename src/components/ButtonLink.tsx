@@ -22,8 +22,8 @@ export function ButtonLink({
     const classes = `
 		${bgColor}
 		${textColor}
-		font-primary text-sm
-		rounded-full px-6 py-2
+		font-primary text-base sm:text-base md:text-sm lg:text-sm
+		rounded-full px-5 py-1 md:px-6 md:py-2 lg:px-6 lg:py-2
 		${hoverColor}
 		${className}
 		transition-all duration-800 ease-in-out

@@ -11,7 +11,7 @@ interface SolutionProps {
 export default function CRTSolution({ steps, solution }: SolutionProps) {
     return (
         <div className="mt-3 p-6 space-y-4">
-            <h2 className="text-2xl font-primary font-bold text-primary">Solução final:</h2>
+            <h2 className="text-xl md:text-2xl font-primary font-bold text-primary">Solução final:</h2>
 
             <MathJaxContext>
                 <MathJax>
@@ -22,7 +22,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
             </MathJaxContext>
 
             <div className="mt-4">
-                <h3 className="text-2xl font-primary font-bold text-primary">Etapas do Teorema Chinês do Resto:</h3>
+                <h3 className="text-xl md:text-2xl font-primary font-bold text-primary">Etapas do Teorema Chinês do Resto:</h3>
                 <ul className="space-y-2">
                     {steps.map((step, i) => {
                         let result = []
@@ -30,10 +30,10 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                         switch (step.step) {
                             case 'Redução das Congruências':
                                 result = step.reduceSteps
-                                    .map((reduceStep: any, i: any) => 
-                                        reduceStep.wasReduced 
-                                        ? <CongruenceView key={i} congruence={reduceStep.reducedCongruence}/>
-                                        : null
+                                    .map((reduceStep: any, i: any) =>
+                                        reduceStep.wasReduced
+                                            ? <CongruenceView key={i} congruence={reduceStep.reducedCongruence} />
+                                            : null
                                     )
                                     .filter((item: any) => item !== null)
                                 break;
@@ -42,8 +42,8 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                 result = step.canonicalSteps
                                     .map((canonicalStep: any, i: any) =>
                                         canonicalStep.wasInverted
-                                        ? <CongruenceView key={i} congruence={canonicalStep.finalCongruence} />
-                                        : null
+                                            ? <CongruenceView key={i} congruence={canonicalStep.finalCongruence} />
+                                            : null
                                     )
                                     .filter((item: any) => item !== null)
                                 break;
@@ -82,33 +82,36 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                     )
                                 })
 
-                                const interProductLabeled = step.crtSteps.map((crtStep: CRTStep) =>
-                                    `R_{${crtStep.equation.id}} \\cdot N_{${crtStep.equation.id}} \\cdot I_{${crtStep.equation.id}}`
-                                ).join(' + ')
-                                
-                                const interProductValues = step.crtSteps.map((crtStep: any) =>
-                                    `${crtStep.equation.modulus} \\cdot ${crtStep.partialModulusProduct} \\cdot ${crtStep.modulusInverse}`
-                                ).join(' + ')
-                                
-                                const crtTerms = step.crtSteps.map((crtStep: any) => `${crtStep.CRTTerm}`).join(' + ')
-                                
                                 const weigthedSum = step.crtSteps.reduce(
                                     (acc: any, crtStep: any) =>
                                         acc + (crtStep.equation.remainder * crtStep.partialModulusProduct * crtStep.modulusInverse),
                                     0
                                 )
 
-                                const interProductLatex = (
+                                const interProductLines = step.crtSteps.map((crtStep: CRTStep) => {
+                                    const { equation, partialModulusProduct, modulusInverse } = crtStep;
+                                    const { id, remainder } = equation;
+                                    const result = remainder * partialModulusProduct * modulusInverse;
+                                  
+                                    return `R_{${id}} \\cdot N_{${id}} \\cdot I_{${id}} = ${remainder} \\cdot ${partialModulusProduct} \\cdot ${modulusInverse} = ${result}`;
+                                  });
+                                  
+                                  const interProductLatex = (
                                     <MathJaxContext>
-                                        <MathJax>
-                                            {`\\[ ${interProductLabeled} = \\]`}
-                                            {`\\[ ${interProductValues} = \\]`}
-                                            {`\\[ ${crtTerms} = \\]`}
-                                            {`\\[ ${weigthedSum} \\]`}
-                                        </MathJax>
+                                      <MathJax>
+                                        {`
+                                          \\[
+                                          \\begin{array}{c}
+                                            ${interProductLines.join(' \\\\')}
+                                            \\\\
+                                            \\text{Soma} = ${weigthedSum}
+                                          \\end{array}
+                                          \\]
+                                        `}
+                                      </MathJax>
                                     </MathJaxContext>
-                                )
-
+                                  );
+                                                      
                                 result = [
                                     <div key="canon" className="mb-6">
                                         <h2 className="text-4sm underline font-bold font-primary text-black px-3 py-3 pb-1">
@@ -125,7 +128,7 @@ export default function CRTSolution({ steps, solution }: SolutionProps) {
                                                 {steps[2].equation}
                                             </MathJax>
                                         </MathJaxContext>
-                                    </div>,                                    
+                                    </div>,
                                     <div key="ratios" className="mb-6">
                                         <h2 className="text-4sm underline font-bold font-primary text-black px-3 py-3 pb-1">
                                             Razões

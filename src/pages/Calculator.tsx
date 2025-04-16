@@ -79,15 +79,15 @@ const Calculator = () => {
     return (
         <section className="flex flex-col my-10 items-center justify-center h-full w-full text-center">
             <img
-                className="h-30 mb-3"
+                className="h-25 sm:h-25 md:h-30 lg:h-30 mb-3"
                 src={illustration}
                 alt="Imagem de um homem pensativo segurando uma bola de cristal"
             />
 
-            <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[700px] mx-auto px-4 shadow-md bg-primary-light p-5 rounded-2xl">
+            <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[700px] mx-auto px-4 sm:px-6 md:px-8 shadow-md bg-primary-light p-5 sm:p-6 md:p-8 rounded-2xl">
                 <div className="flex flex-row justify-evenly">
                     <div className="flex flex-col items-center rounded-xl">
-                        <p className="text-2sm font-primary text-white mb-2">Teorema Chinês do Resto</p>
+                        <p className="text-sm md:text-base font-primary text-white mb-2">Teorema Chinês do Resto</p>
                         <input
                             type="radio"
                             onChange={() => changeMode('CRT')}
@@ -97,7 +97,7 @@ const Calculator = () => {
                         />
                     </div>
                     <div className="flex flex-col items-center rounded-xl">
-                        <p className="text-2sm font-primary text-white mb-2">Inverso</p>
+                        <p className="text-sm md:text-base font-primary text-white mb-2">Inverso</p>
                         <input
                             type="radio"
                             onChange={() => changeMode('INVERSE')}
