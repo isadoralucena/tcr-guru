@@ -10,10 +10,10 @@ export function CongruenceView({
 }: CongruenceProps) {
     return (
         <MathJaxContext>
-            <div className="flex items-center justify-center mb-3 space-x-1">
+            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-base text-center">
                 {congruence.coefficient !== 1 && (
                     <MathJax>
-                        <span className="max-w-[4rem] text-center">{`\\( ${congruence.coefficient} \\)`}</span>
+                        <span className="min-w-[2rem]">{`\\( ${congruence.coefficient} \\)`}</span>
                     </MathJax>
                 )}
 
@@ -22,7 +22,7 @@ export function CongruenceView({
                 </MathJax>
 
                 <MathJax>
-                    <span className="max-w-[4rem] text-center">{`\\( ${congruence.remainder} \\)`}</span>
+                    <span className="min-w-[2rem]">{`\\( ${congruence.remainder} \\)`}</span>
                 </MathJax>
 
                 <MathJax>
@@ -31,7 +31,7 @@ export function CongruenceView({
 
                 {congruence.id !== undefined && (
                     <MathJax>
-                        <span className="ml-2 text-sm text-gray-600">{`\\((${congruence.id})\\)`}</span>
+                        <span className="text-sm text-gray-600">{`\\((${congruence.id})\\)`}</span>
                     </MathJax>
                 )}
             </div>

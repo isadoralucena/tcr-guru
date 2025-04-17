@@ -10,8 +10,8 @@ const Header = () => {
     return (
         <header className="relative bg-primary-dark text-white shadow-md px-6 py-3 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-                <img src={logo} alt="Logo" className="h-16" />
-                <span className="font-secondary text-3xl sm:text-4xl">TCR GURU</span>
+                <img src={logo} alt="Logo" className="h-10 sm:h-10 md:h-16 lg:h-16" />
+                <span className="font-secondary text-2xl sm:text-2xl md:text-4xl lg:text-4xl">TCR GURU</span>
             </div>
 
             <button

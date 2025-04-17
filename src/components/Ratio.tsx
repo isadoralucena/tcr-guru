@@ -10,11 +10,9 @@ export function Ratio({
 }: RatioProps) {
     return (
         <MathJaxContext>
-            {/* <div className="flex mx-auto items-center space-x-4 mt-3"> */}
                 <MathJax>
                     {`\\(N_{${crtStep.equation.id}} = \\frac{${totalModulus}}{${crtStep.equation.modulus}} = ${crtStep.partialModulusProduct}\\)`}
                 </MathJax>
-            {/* </div> */}
         </MathJaxContext>
     );
 }
