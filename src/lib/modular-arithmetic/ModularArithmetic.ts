@@ -80,9 +80,13 @@ export function validateCongruence(congruence: Congruence): void {
         throw new TypeError("Os módulos das congruências devem ser maior que 1.");
     }
     
+    if(coefficient == 0 || modulus == 0 || remainder == 0){
+        throw new TypeError("O sistema só aceita números inteiros maiores que 0.");
+    }
+
     if (((coefficient % modulus) + modulus) % modulus === 0) {
         throw new TypeError(
-            "Congruências inválidsa: os coeficientes não podem ser múltiplos dos módulos."
+            "Congruências inválidas: os coeficientes não podem ser múltiplos dos módulos."
         );
     }
 }
