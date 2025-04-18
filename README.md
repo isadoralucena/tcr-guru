@@ -1,13 +1,12 @@
-<p align="center" style="margin-bottom: 0;">
+<div align="center" style="margin: 0; padding: 0;">
   <img src="/src/assets/home-illustration.svg" alt="TCR Guru Logo" width="150"/>
-</p>
+</div>
 
-<h1 align="center">TCR Guru</h1>
+<h1 align="center" style="margin: 0; padding: 0;">TCR Guru</h1>
 
-<p align="center">
+<p align="center" style="margin: 0; padding: 0;">
   Web application that solves systems of congruences using the Chinese Remainder Theorem (CRT), and also computes the modular inverse of a congruence, providing a step-by-step solution.
 </p>
-
 
 ## 🚀 Technologies
 
