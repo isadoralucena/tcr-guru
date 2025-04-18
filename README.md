@@ -1,13 +1,20 @@
-# TCR Guru
+<p align="center" style="margin-bottom: 0;">
+  <img src="/src/assets/home-illustration.svg" alt="TCR Guru Logo" width="150"/>
+</p>
 
-Web application that solves the Chinese Remainder Theorem.
+<h1 align="center">TCR Guru</h1>
+
+<p align="center">
+  Web application that solves systems of congruences using the Chinese Remainder Theorem (CRT), and also computes the modular inverse of a congruence, providing a step-by-step solution.
+</p>
+
 
 ## 🚀 Technologies
 
 - [Vite](https://vitejs.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
-- HTML5
-- React and Tailwind
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
 ## 📦 Installation and usage
 
@@ -35,8 +42,9 @@ npm run dev
 ```
 
 5. Open your browser and go to:
-
+```bash
 http://localhost:5173
+```
 
 ## 📝 License
 This project is licensed under the MIT License.
